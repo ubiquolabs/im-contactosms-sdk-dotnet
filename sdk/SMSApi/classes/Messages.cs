@@ -56,7 +56,7 @@ namespace InteractuaMovil.ContactoSms.Api
         /// <param name="ShortName">Filter all messages sent to specified group's short_name</param>
         /// <param name="Include_Recipients">If true it will include the list of recipients for each message</param>
         /// <returns>Object with the message list</returns>
-        public ResponseObjects.ApiResponse<List<MessageResponse>> GetList(DateTime? StartDate = null, DateTime? EndDate = null, Int32 Start = -1, Int32 Limit = -1, String Msisdn = null, String ShortName = null, Boolean IncludeRecipients = false, MessageDirection Direction = MessageDirection.MT, String Username = null)
+        public ResponseObjects.ApiResponse<List<MessageResponse>> GetList(DateTime? StartDate = null, DateTime? EndDate = null, Int32 Start = -1, Int32 Limit = -1, String Msisdn = null, String ShortName = null, Boolean IncludeRecipients = false, MessageDirection Direction = MessageDirection.MT, String Username = null, Boolean deliveryStatusEnable = false)
         { 
             Dictionary<string, string> UrlParameters = new Dictionary<string, string>();
             
@@ -78,6 +78,8 @@ namespace InteractuaMovil.ContactoSms.Api
                 UrlParameters.Add("short_name", ShortName);
             if (Username != null)
                 UrlParameters.Add("user", Username);
+            if (deliveryStatusEnable != false)
+                UrlParameters.Add("delivery_status_enable", deliveryStatusEnable.ToString());
             UrlParameters.Add("direction", Direction.ToString().ToUpper());
             UrlParameters.Add("include_recipients", IncludeRecipients.ToString().ToLower());
 
