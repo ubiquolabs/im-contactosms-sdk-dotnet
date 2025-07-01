@@ -270,7 +270,7 @@ public class SmsApiExampleService
             if (string.IsNullOrEmpty(testPhoneNumber) || testPhoneNumber == "PUT_YOUR_TEST_PHONE_NUMBER_HERE")
             {
                 Console.WriteLine("⚠️  Please configure TestData:TestPhoneNumber in appsettings.json");
-                Console.WriteLine("   Example: \"TestPhoneNumber\": \"50245858369\"");
+                Console.WriteLine("   Example: \"TestPhoneNumber\": \"+1234567890\"");
                 Console.WriteLine();
                 return;
             }
