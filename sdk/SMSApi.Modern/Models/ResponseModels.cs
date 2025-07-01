@@ -100,7 +100,7 @@ public class GroupMembers
 public class MessageResponse
 {
     [JsonPropertyName("message_id")]
-    public int MessageId { get; set; }
+    public string? MessageId { get; set; }
 
     [JsonPropertyName("short_code")]
     public string ShortCode { get; set; } = string.Empty;
@@ -148,7 +148,7 @@ public class MessageResponse
     public bool Scheduled { get; set; }
 
     [JsonPropertyName("created_on")]
-    public DateTime CreatedOn { get; set; }
+    public string? CreatedOn { get; set; }
 
     [JsonPropertyName("created_by")]
     public string CreatedBy { get; set; } = string.Empty;
@@ -230,7 +230,7 @@ public class ScheduleMessageResponse
     public string Message { get; set; } = string.Empty;
 
     [JsonPropertyName("date_expires")]
-    public DateTime DateExpires { get; set; }
+    public string? DateExpires { get; set; }
 
     [JsonPropertyName("groups")]
     public List<MessageGroup> Groups { get; set; } = new();

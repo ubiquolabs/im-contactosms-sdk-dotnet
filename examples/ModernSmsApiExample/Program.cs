@@ -88,6 +88,9 @@ public class SmsApiExampleService
             return;
         }
 
+        // Test SMS sending first
+        await TestSendSmsAsync();
+        
         // Run async examples
         await TestAsyncMethodsAsync();
         
@@ -248,6 +251,80 @@ public class SmsApiExampleService
         catch (Exception ex)
         {
             Console.WriteLine($"✅ Exception handling works: {ex.Message}");
+        }
+
+        Console.WriteLine();
+    }
+
+    private async Task TestSendSmsAsync()
+    {
+        Console.WriteLine("📱 Testing SMS Sending");
+        Console.WriteLine("======================");
+
+        try
+        {
+            // Get phone number from configuration
+            var testPhoneNumber = _configuration["TestData:TestPhoneNumber"];
+            var testMessage = _configuration["TestData:TestMessage"] ?? "Hello from Modern SMS API SDK!";
+
+            if (string.IsNullOrEmpty(testPhoneNumber) || testPhoneNumber == "PUT_YOUR_TEST_PHONE_NUMBER_HERE")
+            {
+                Console.WriteLine("⚠️  Please configure TestData:TestPhoneNumber in appsettings.json");
+                Console.WriteLine("   Example: \"TestPhoneNumber\": \"50245858369\"");
+                Console.WriteLine();
+                return;
+            }
+
+            Console.WriteLine($"📤 Sending SMS to: {testPhoneNumber}");
+            Console.WriteLine($"💬 Message: {testMessage}");
+            Console.WriteLine("⏳ Sending...\n");
+
+            // 🚀 ASYNC SMS SENDING
+            _logger.LogInformation("Testing SendToContactAsync...");
+            var result = await _smsApi.Messages.SendToContactAsync(
+                msisdn: testPhoneNumber,
+                message: testMessage,
+                messageId: $"test-{DateTime.Now:yyyyMMdd-HHmmss}"
+            );
+
+            if (result.IsOk)
+            {
+                Console.WriteLine("✅ ¡SMS ENVIADO EXITOSAMENTE!");
+                Console.WriteLine($"📧 Message ID: {result.Data?.MessageId}");
+                Console.WriteLine($"📱 Destination: {result.Data?.Msisdn}");
+                Console.WriteLine($"💬 Message: {result.Data?.Message}");
+                Console.WriteLine($"📊 HTTP Status: {result.HttpCode}");
+                Console.WriteLine($"🕐 Sent at: {DateTime.Now:yyyy-MM-dd HH:mm:ss}");
+            }
+            else
+            {
+                Console.WriteLine("❌ ERROR SENDING SMS:");
+                Console.WriteLine($"🔴 Error Code: {result.ErrorCode}");
+                Console.WriteLine($"📝 Description: {result.ErrorDescription}");
+                Console.WriteLine($"🌐 HTTP Status: {result.HttpCode}");
+            }
+
+            // Test sync version too
+            Console.WriteLine("\n🔄 Testing sync version...");
+            var syncResult = _smsApi.Messages.SendToContact(
+                testPhoneNumber, 
+                "Sync SMS test from Modern SDK"
+            );
+
+            if (syncResult.IsOk)
+            {
+                Console.WriteLine("✅ Sync SMS also sent successfully!");
+                Console.WriteLine($"📧 Sync Message ID: {syncResult.Data?.MessageId}");
+            }
+            else
+            {
+                Console.WriteLine($"❌ Sync SMS failed: {syncResult.ErrorDescription}");
+            }
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"❌ SMS sending failed: {ex.Message}");
+            _logger.LogError(ex, "Error sending SMS");
         }
 
         Console.WriteLine();
