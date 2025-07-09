@@ -16,7 +16,9 @@ public interface IContacts
     ApiResponse<ContactResponse> Add(string countryCode, string msisdn, 
         string? firstName = null, string? lastName = null);
     ApiResponse<ContactResponse> Delete(string msisdn);
-    ApiResponse<List<GroupResponse>> GetGroupList(string msisdn);
+    ApiResponse<List<TagResponse>> GetTagList(string msisdn);
+    ApiResponse<ContactResponse> AddTag(string msisdn, string tagName);
+    ApiResponse<ContactResponse> RemoveTag(string msisdn, string tagName);
 
     // Asynchronous methods (recommended for new code)
     Task<ApiResponse<List<ContactResponse>>> GetListAsync(List<ContactStatus>? contactStatuses = null, 
@@ -28,5 +30,7 @@ public interface IContacts
     Task<ApiResponse<ContactResponse>> AddAsync(string countryCode, string msisdn, 
         string? firstName = null, string? lastName = null, CancellationToken cancellationToken = default);
     Task<ApiResponse<ContactResponse>> DeleteAsync(string msisdn, CancellationToken cancellationToken = default);
-    Task<ApiResponse<List<GroupResponse>>> GetGroupListAsync(string msisdn, CancellationToken cancellationToken = default);
+    Task<ApiResponse<List<TagResponse>>> GetTagListAsync(string msisdn, CancellationToken cancellationToken = default);
+    Task<ApiResponse<ContactResponse>> AddTagAsync(string msisdn, string tagName, CancellationToken cancellationToken = default);
+    Task<ApiResponse<ContactResponse>> RemoveTagAsync(string msisdn, string tagName, CancellationToken cancellationToken = default);
 } 

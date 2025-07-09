@@ -1,6 +1,6 @@
-using InteractuaMovil.ContactoSms.Api.Models;
 using InteractuaMovil.ContactoSms.Api.Services;
 using InteractuaMovil.ContactoSms.Api.Configuration;
+using InteractuaMovil.ContactoSms.Api.Models; // ✅ Re-added for MessageDirection
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using Moq;
@@ -27,14 +27,16 @@ public class MessagesServiceTests
         _apiClientLoggerMock = new Mock<ILogger<ApiClient>>();
         
         var httpClient = new HttpClient(_httpHandlerMock.Object);
-        var options = new SmsApiOptions
+        // ✅ Use fully qualified name to resolve ambiguity
+        var options = new InteractuaMovil.ContactoSms.Api.Configuration.SmsApiOptions
         {
             ApiKey = "test-key",
             SecretKey = "test-secret",
             ApiUrl = "https://test.com/",
             TimeoutSeconds = 30
         };
-        var optionsMock = new Mock<IOptions<SmsApiOptions>>();
+        // ✅ Use fully qualified name here too
+        var optionsMock = new Mock<IOptions<InteractuaMovil.ContactoSms.Api.Configuration.SmsApiOptions>>();
         optionsMock.Setup(x => x.Value).Returns(options);
         
         _apiClient = new ApiClient(httpClient, optionsMock.Object, _apiClientLoggerMock.Object);
@@ -121,7 +123,7 @@ public class MessagesServiceTests
         // Assert
         Assert.True(result.IsOk);
         Assert.NotNull(result.Data);
-        Assert.Equal(123, result.Data.MessageId);
+        Assert.Equal("123", result.Data.MessageId);
     }
 
     [Fact]
@@ -148,7 +150,7 @@ public class MessagesServiceTests
         // Assert
         Assert.True(result.IsOk);
         Assert.NotNull(result.Data);
-        Assert.Equal(456, result.Data.MessageId);
+        Assert.Equal("456", result.Data.MessageId);
     }
 
     [Fact]

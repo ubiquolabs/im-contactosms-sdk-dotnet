@@ -30,14 +30,20 @@ public class SmsApi : ISmsApi
     public IAccounts Account { get; }
 
     /// <summary>
+    /// Tag management operations
+    /// </summary>
+    public ITags Tags { get; }
+
+    /// <summary>
     /// Constructor for dependency injection
     /// </summary>
-    public SmsApi(IContacts contacts, IGroups groups, IMessages messages, IAccounts accounts)
+    public SmsApi(IContacts contacts, IGroups groups, IMessages messages, IAccounts accounts, ITags tags)
     {
         Contacts = contacts ?? throw new ArgumentNullException(nameof(contacts));
         Groups = groups ?? throw new ArgumentNullException(nameof(groups));
         Messages = messages ?? throw new ArgumentNullException(nameof(messages));
         Account = accounts ?? throw new ArgumentNullException(nameof(accounts));
+        Tags = tags ?? throw new ArgumentNullException(nameof(tags));
     }
 
     /// <summary>

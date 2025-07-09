@@ -58,6 +58,7 @@ public static class ServiceCollectionExtensions
         services.AddScoped<IContacts, ContactsService>();
         services.AddScoped<IGroups, GroupsService>();
         services.AddScoped<IAccounts, AccountsService>();
+        services.AddScoped<ITags, TagsService>();
         services.AddScoped<ISmsApi, SmsApi>();
 
         return services;
@@ -85,6 +86,7 @@ public static class ServiceCollectionExtensions
         services.AddScoped<IContacts, ContactsService>();
         services.AddScoped<IGroups, GroupsService>();
         services.AddScoped<IAccounts, AccountsService>();
+        services.AddScoped<ITags, TagsService>();
         services.AddScoped<ISmsApi, SmsApi>();
 
         return services;

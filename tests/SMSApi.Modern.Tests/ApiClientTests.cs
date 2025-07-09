@@ -2,7 +2,6 @@ using System.Net;
 using System.Net.Http;
 using System.Text;
 using InteractuaMovil.ContactoSms.Api.Configuration;
-using InteractuaMovil.ContactoSms.Api.Models;
 using InteractuaMovil.ContactoSms.Api.Services;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;

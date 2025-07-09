@@ -42,7 +42,8 @@ public enum MessageSentFrom
     API_REST,
     SMS,
     SYSTEM,
-    SCHEDULER
+    SCHEDULER,
+    ADDON // ✅ Missing value found in API response
 }
 
 /// <summary>
@@ -65,7 +66,10 @@ public enum ContactStatus
     PENDING,
     CONFIRMED,
     CANCELLED,
-    BLOCKED
+    BLOCKED,
+    SUSCRIBED,     // ✅ API real value (sin 'B')
+    SUBSCRIBED,    // Alternative spelling
+    INVITED
 }
 
 /// <summary>
@@ -77,5 +81,6 @@ public enum AddedFrom
     API,
     SMS,
     IMPORT,
-    MANUAL
+    MANUAL,
+    FILE_UPLOAD    // ✅ Real API value
 } 

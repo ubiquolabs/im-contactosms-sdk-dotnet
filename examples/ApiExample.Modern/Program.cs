@@ -1,5 +1,6 @@
 using InteractuaMovil.ContactoSms.Api.Extensions;
 using InteractuaMovil.ContactoSms.Api.Interfaces;
+using InteractuaMovil.ContactoSms.Api.Models;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
@@ -71,8 +72,8 @@ public class SmsApiExampleService
     private readonly ILogger<SmsApiExampleService> _logger;
 
     // Test data - update these values for testing
-    private readonly string _testGroupName = "TestGroup";
-    private readonly string _testPhoneNumber = "+50212345678";
+    private readonly string _testGroupName = "TestTag";
+    private readonly string _testPhoneNumber = "50212345678";
     private readonly string _testFirstName = "John";
     private readonly string _testLastName = "Doe";
 
@@ -359,7 +360,7 @@ public class SmsApiExampleService
     {
         Console.WriteLine($"\n🔍 Getting Contact: {_testPhoneNumber}...");
         
-        var contact = await _smsApi.Contacts.GetByPhoneNumberAsync(_testPhoneNumber);
+        var contact = await _smsApi.Contacts.GetByMsisdnAsync(_testPhoneNumber);
         
         if (contact.IsOk)
         {
@@ -389,6 +390,9 @@ public class SmsApiExampleService
             
             // Send message to group
             await SendMessageToGroupAsync();
+            
+            // Send message to tags
+            await SendMessageToTagsAsync();
             
             // Get message log
             await GetMessageLogAsync();
@@ -446,15 +450,41 @@ public class SmsApiExampleService
         }
     }
 
+    private async Task SendMessageToTagsAsync()
+    {
+        var messageId = Guid.NewGuid().ToString("N")[..8];
+        var message = "Hello Tags from Modern SMS API SDK!";
+        var tags = new[] { "customers", "vip", "test" };
+        
+        Console.WriteLine($"\n🏷️  Sending Message to Tags: {string.Join(", ", tags)}...");
+        Console.WriteLine($"   Message: {message}");
+        Console.WriteLine($"   ID: {messageId}");
+        
+        var response = await _smsApi.Messages.SendToTagsAsync(tags, message, messageId);
+        
+        if (response.IsOk)
+        {
+            Console.WriteLine($"✅ Message sent successfully to tags:");
+            Console.WriteLine($"   Sent Count: {response.Data?.SentCount}");
+            Console.WriteLine($"   Message: {response.Data?.Message}");
+        }
+        else
+        {
+            Console.WriteLine($"❌ Error: {response.ErrorDescription}");
+        }
+    }
+
     private async Task GetMessageLogAsync()
     {
-        Console.WriteLine($"\n📋 Getting Message Log (last 5 days)...");
+        Console.WriteLine($"\n📋 Getting Message Log (last 24 hours)...");
         
-        var response = await _smsApi.Messages.GetListAsync(
-            startDate: DateTime.Today.AddDays(-5),
-            endDate: DateTime.Today,
+        // Use a smaller time window to reduce data load
+        var response = await _smsApi.Messages.GetListWithDeliveryStatusAsync(
+            startDate: DateTime.Today.AddHours(-24), // Only last 24 hours instead of 5 days
+            endDate: DateTime.Now,
             direction: MessageDirection.MT,
-            limit: 10
+            limit: 5, // Reduced limit from 10 to 5
+            deliveryStatusEnabled: true
         );
         
         if (response.IsOk)
@@ -471,6 +501,32 @@ public class SmsApiExampleService
         else
         {
             Console.WriteLine($"❌ Error: {response.ErrorDescription}");
+            
+            // Try with an even smaller window if it failed
+            Console.WriteLine($"\n🔄 Trying with smaller time window (last 2 hours)...");
+            var fallbackResponse = await _smsApi.Messages.GetListWithDeliveryStatusAsync(
+                startDate: DateTime.Now.AddHours(-2),
+                endDate: DateTime.Now,
+                direction: MessageDirection.MT,
+                limit: 3,
+                deliveryStatusEnabled: false // Try without delivery status first
+            );
+            
+            if (fallbackResponse.IsOk)
+            {
+                Console.WriteLine($"✅ Fallback successful - Found {fallbackResponse.Data?.Count ?? 0} messages:");
+                if (fallbackResponse.Data?.Count > 0)
+                {
+                    foreach (var msg in fallbackResponse.Data)
+                    {
+                        Console.WriteLine($"   📨 {msg.MessageId}: {msg.Message?[..Math.Min(50, msg.Message.Length)]}...");
+                    }
+                }
+            }
+            else
+            {
+                Console.WriteLine($"❌ Fallback also failed: {fallbackResponse.ErrorDescription}");
+            }
         }
     }
 

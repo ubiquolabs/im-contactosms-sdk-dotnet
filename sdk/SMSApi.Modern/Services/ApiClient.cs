@@ -4,10 +4,10 @@ using System.Net.Http.Headers;
 using System.Security.Cryptography;
 using System.Text;
 using System.Text.Json;
-using InteractuaMovil.ContactoSms.Api.Configuration;
 using InteractuaMovil.ContactoSms.Api.Models;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
+using SmsApiOptions = InteractuaMovil.ContactoSms.Api.Configuration.SmsApiOptions;
 
 namespace InteractuaMovil.ContactoSms.Api.Services;
 
@@ -108,9 +108,12 @@ public class ApiClient
             queryString = BuildQueryString(urlParams);
             if (addParamsToQueryString)
             {
-                var uriBuilder = new UriBuilder(_httpClient.BaseAddress!)
+                var baseUri = _httpClient.BaseAddress!;
+                var fullPath = baseUri.AbsolutePath.TrimEnd('/') + "/" + endpoint.TrimStart('/');
+                
+                var uriBuilder = new UriBuilder(baseUri)
                 {
-                    Path = endpoint,
+                    Path = fullPath,
                     Query = queryString
                 };
                 request.RequestUri = uriBuilder.Uri;
@@ -127,10 +130,9 @@ public class ApiClient
     {
         var date = DateTime.UtcNow.ToString("r");
         
-        // Build canonical string for HMAC
-        var canonical = method == HttpMethod.Get
-            ? $"{_options.ApiKey}{date}{queryString}"
-            : $"{_options.ApiKey}{date}{queryString}{bodyData}";
+        // ✅ Use SAME canonical string structure as Java (always works)
+        // Java: apiKey + httpDate + filters + jsonText
+        var canonical = $"{_options.ApiKey}{date}{queryString}{bodyData}";
 
         // Generate HMAC signature
         var signature = GenerateHmacSignature(canonical);
@@ -140,9 +142,12 @@ public class ApiClient
         request.Headers.Authorization = AuthenticationHeaderValue.Parse(authHeader);
         request.Headers.Date = DateTime.Parse(date, System.Globalization.CultureInfo.InvariantCulture);
         
+        // ✅ Add missing X-IM-ORIGIN header that JavaScript sends
+        request.Headers.Add("X-IM-ORIGIN", "IM_SDK_NET_V1");
+        
         if (_options.EnableLogging)
         {
-            _logger.LogDebug("Added authentication: {AuthHeader}", authHeader);
+            _logger.LogDebug("Added authentication: {AuthHeader} | Canonical: {Canonical}", authHeader, canonical);
         }
 
         return Task.CompletedTask;
@@ -205,6 +210,17 @@ public class ApiClient
             }
 
             _logger.LogWarning("API error: {StatusCode} - {Error}", response.StatusCode, apiResponse.ErrorDescription);
+            
+            // 🔍 DEBUG: Log full response details for 500 errors
+            if (response.StatusCode == HttpStatusCode.InternalServerError)
+            {
+                Console.WriteLine("=== 500 ERROR DETAILS ===");
+                Console.WriteLine($"Status: {response.StatusCode}");
+                Console.WriteLine($"Reason: {response.ReasonPhrase}");
+                Console.WriteLine($"Content: {content}");
+                Console.WriteLine($"Headers: {string.Join(", ", response.Headers.Select(h => $"{h.Key}: {string.Join("; ", h.Value)}"))}");
+                Console.WriteLine("========================");
+            }
         }
 
         return apiResponse;
@@ -221,9 +237,25 @@ public class ApiClient
     {
         if (parameters == null || parameters.Count == 0) return string.Empty;
 
-        var pairs = parameters.Select(kvp => 
-            $"{Uri.EscapeDataString(kvp.Key)}={Uri.EscapeDataString(kvp.Value)}");
+        // ✅ Sort parameters alphabetically like Java SDK
+        var pairs = parameters
+            .OrderBy(kvp => kvp.Key)
+            .Select(kvp => $"{UrlEncodeCustomStyle(kvp.Key)}={UrlEncodeCustomStyle(kvp.Value)}");
         
         return string.Join("&", pairs);
+    }
+
+    /// <summary>
+    /// Custom URL encoding to match JavaScript's implementation (spaces as '+')
+    /// </summary>
+    private static string UrlEncodeCustomStyle(string value)
+    {
+        if (string.IsNullOrEmpty(value)) return string.Empty;
+
+        // Use .NET's standard URL encoding, which converts spaces to %20 and colons to %3A
+        var encoded = Uri.EscapeDataString(value);
+        
+        // Replace %20 with '+' to match JavaScript's final encoding style for this API
+        return encoded.Replace("%20", "+");
     }
 } 

@@ -34,14 +34,29 @@ public class SmsApiOptions
     public ProxyOptions? Proxy { get; set; }
 
     /// <summary>
-    /// HTTP client timeout in seconds (default: 30)
+    /// HTTP client timeout in seconds (increased for message queries)
     /// </summary>
-    public int TimeoutSeconds { get; set; } = 30;
+    public int TimeoutSeconds { get; set; } = 60;
+
+    /// <summary>
+    /// Specific timeout for message list queries (can be longer)
+    /// </summary>
+    public int MessageQueryTimeoutSeconds { get; set; } = 90;
 
     /// <summary>
     /// Enable request/response logging for debugging
     /// </summary>
-    public bool EnableLogging { get; set; } = false;
+    public bool EnableLogging { get; set; } = true;
+
+    /// <summary>
+    /// Maximum retry attempts for failed requests
+    /// </summary>
+    public int MaxRetryAttempts { get; set; } = 3;
+
+    /// <summary>
+    /// Delay between retry attempts in milliseconds
+    /// </summary>
+    public int RetryDelayMs { get; set; } = 1000;
 }
 
 /// <summary>

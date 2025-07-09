@@ -24,4 +24,9 @@ public interface ISmsApi
     /// Account operations
     /// </summary>
     IAccounts Account { get; }
+
+    /// <summary>
+    /// Tag management operations
+    /// </summary>
+    ITags Tags { get; }
 } 

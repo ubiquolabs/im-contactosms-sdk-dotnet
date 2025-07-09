@@ -273,4 +273,65 @@ public class InboxMessageResponse
 
     [JsonPropertyName("is_deleted")]
     public int IsDeleted { get; set; }
+}
+
+/// <summary>
+/// Tag response model
+/// </summary>
+public class TagResponse
+{
+    [JsonPropertyName("tag_name")]
+    public string TagName { get; set; } = string.Empty;
+
+    [JsonPropertyName("tag_id")]
+    public string TagId { get; set; } = string.Empty;
+
+    [JsonPropertyName("description")]
+    public string Description { get; set; } = string.Empty;
+
+    [JsonPropertyName("total_contacts")]
+    public int TotalContacts { get; set; }
+
+    [JsonPropertyName("created_on")]
+    public string CreatedOn { get; set; } = string.Empty;
+}
+
+/// <summary>
+/// Contact request model
+/// </summary>
+public class ContactRequest
+{
+    [JsonPropertyName("country_code")]
+    public string CountryCode { get; set; } = string.Empty;
+
+    [JsonPropertyName("msisdn")]
+    public string Msisdn { get; set; } = string.Empty;
+
+    [JsonPropertyName("first_name")]
+    public string FirstName { get; set; } = string.Empty;
+
+    [JsonPropertyName("last_name")]
+    public string LastName { get; set; } = string.Empty;
+
+    [JsonPropertyName("email")]
+    public string Email { get; set; } = string.Empty;
+
+    [JsonPropertyName("added_from")]
+    [JsonConverter(typeof(JsonStringEnumConverter))]
+    public AddedFrom AddedFrom { get; set; } = AddedFrom.API;
+
+    [JsonPropertyName("custom_field_1")]
+    public string CustomField1 { get; set; } = string.Empty;
+
+    [JsonPropertyName("custom_field_2")]
+    public string CustomField2 { get; set; } = string.Empty;
+
+    [JsonPropertyName("custom_field_3")]
+    public string CustomField3 { get; set; } = string.Empty;
+
+    [JsonPropertyName("custom_field_4")]
+    public string CustomField4 { get; set; } = string.Empty;
+
+    [JsonPropertyName("custom_field_5")]
+    public string CustomField5 { get; set; } = string.Empty;
 } 

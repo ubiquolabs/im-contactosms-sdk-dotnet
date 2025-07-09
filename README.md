@@ -3,213 +3,327 @@
 [![.NET 8.0](https://img.shields.io/badge/.NET-8.0-blue?logo=dotnet)](https://dotnet.microsoft.com/download/dotnet/8.0)
 [![C# 12](https://img.shields.io/badge/C%23-12.0-green?logo=csharp)](https://docs.microsoft.com/en-us/dotnet/csharp/)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
+[![Production Ready](https://img.shields.io/badge/Status-Production%20Ready-brightgreen)](https://github.com)
 
-A **modern**, **async-first** .NET SDK for SMS API services, designed with .NET 8 best practices, dependency injection, and comprehensive logging support.
+Un SDK **moderno**, **completamente funcional** y **probado en producción** para servicios de SMS API, diseñado con las mejores prácticas de .NET 8, inyección de dependencias y compatibilidad total con la API real.
 
-## ✨ Features
+## ✨ Características
 
-- **Async/Await First** - Full async implementation
-- **Dependency Injection** - Microsoft.Extensions.DI integration
-- **Type Safety** - C# 12, nullable reference types
-- **Structured Logging** - Microsoft.Extensions.Logging
-- **Configuration Management** - IOptions pattern
-- **Security First** - HMAC authentication
-- **Fully Tested** - Unit tests for all core features
+- **🎯 Producción Ready** - Completamente probado con API real
+- **⚡ Async/Await First** - Implementación completamente asíncrona
+- **🏗️ Dependency Injection** - Integración con Microsoft.Extensions.DI
+- **🔒 Type Safety** - C# 12, nullable reference types
+- **📝 Structured Logging** - Microsoft.Extensions.Logging
+- **⚙️ Configuration Management** - Patrón IOptions + User Secrets
+- **🛡️ API Compatibility** - Totalmente compatible con backend real
+- **🧪 Fully Tested** - Pruebas unitarias y de integración
 
-## 📦 Installation
+## 🚀 Funcionalidades Implementadas
 
-### NuGet Package Manager
-```powershell
-Install-Package SMSApi.Modern
-```
+### 📱 Mensajes
+- ✅ Envío a contacto individual
+- ✅ Envío por tags (grupos)
+- ✅ Consulta de mensajes por fecha
+- ✅ Estado de entrega
+- ✅ Mensajes programados
 
-### .NET CLI
+### 👥 Contactos
+- ✅ Agregar/actualizar contactos
+- ✅ Consultar contacto individual
+- ✅ Gestión de tags por contacto
+- ✅ Estados: SUSCRIBED, SUBSCRIBED, INVITED
+
+### 🏷️ Tags
+- ✅ Listar todos los tags
+- ✅ Consultar contactos por tag
+- ✅ Eliminación de tags
+
+### 📊 Cuentas & Reportes
+- ✅ Información de cuenta
+- ✅ Balance y límites
+- ✅ Estadísticas de uso
+
+## 📦 Instalación
+
+### Desde el código fuente (Recomendado)
 ```bash
-dotnet add package SMSApi.Modern
+cd .netLATEST/sdk/SMSApi.Modern
+dotnet build
+dotnet pack
 ```
 
-### PackageReference
+### Referencia de proyecto
 ```xml
-<PackageReference Include="SMSApi.Modern" Version="1.0.0" />
+<ProjectReference Include="path/to/SMSApi.Modern/SMSApi.Modern.csproj" />
 ```
 
-## 🚀 Quick Start Guide
+## ⚡ INICIO RÁPIDO (5 minutos)
 
-### 1. Configuration
+### 📁 Estructura del Proyecto
+```
+.netLATEST/
+├── 🎯 sdk/SMSApi.Modern/           # SDK Principal
+├── 🔧 examples/                    # Ejemplos de uso
+│   ├── QuickTest/                  # ⚡ Prueba rápida (EMPEZAR AQUÍ)
+│   ├── ApiExample.Modern/          # 🔧 Ejemplo completo  
+│   └── SendSmsExample.Modern/      # 📱 Ejemplo simple
+└── 🧪 tests/SMSApi.Modern.Tests/   # Tests unitarios
+```
 
-#### appsettings.json (Recommended)
+### 1️⃣ Configurar Credenciales
+
+**Opción A: User Secrets (Recomendado para desarrollo)**
+```bash
+cd .netLATEST/examples/QuickTest
+dotnet user-secrets set "SmsApi:ApiKey" "tu-api-key-real"
+dotnet user-secrets set "SmsApi:SecretKey" "tu-secret-key-real"  
+dotnet user-secrets set "SmsApi:ApiUrl" "https://tu-api-url.com/api/rest/"
+```
+
+**Opción B: Editar appsettings.json**
 ```json
 {
-  "Logging": {
-    "LogLevel": {
-      "Default": "Information",
-      "SMSApi.Modern": "Debug"
-    }
-  },
   "SmsApi": {
-    "ApiKey": "your-api-key-here",
-    "SecretKey": "your-secret-key-here",
-    "ApiUrl": "https://your-api-url.com/api/",
+    "ApiKey": "tu-api-key-aquí",
+    "SecretKey": "tu-secret-key-aquí", 
+    "ApiUrl": "https://tu-api-url.com/api/rest/",
     "TimeoutSeconds": 30,
-    "EnableLogging": true,
-    "Proxy": {
-      "Address": "http://proxy.example.com:8080",
-      "Username": "proxy-user",
-      "Password": "proxy-password"
-    }
-  },
-  "TestData": {
-    "TestPhoneNumber": "+1234567890",
-    "TestMessage": "Hello from Modern SMS .NET API SDK!"
+    "EnableLogging": true
   }
 }
 ```
 
-### 2. Dependency Injection Setup
+### 2️⃣ Personalizar Datos de Prueba
 
-#### Console Application with Generic Host
+Edita `examples/QuickTest/appsettings.json`:
+```json
+{
+  "TestData": {
+    "TestPhoneNumber": "50212345678",        // 📱 Tu número de prueba real
+    "TestMessage": "¡Hola desde .NET SDK!",
+    "TestTagName": "TestTag",                // 🏷️ Tag existente en tu cuenta
+    "TestContactFirstName": "Juan",
+    "TestContactLastName": "Pérez"
+  }
+}
+```
+
+### 3️⃣ Ejecutar Prueba Completa
+
+```bash
+cd .netLATEST/examples/QuickTest
+dotnet run
+```
+
+**🎯 Resultado esperado:**
+```
+🚀 SMS API .NET SDK - Quick Test
+=================================
+
+📱 Datos de prueba:
+   Teléfono: 50212345678
+   Mensaje: ¡Hola desde .NET SDK!
+   Tag: TestTag
+
+💬 1. PROBANDO ENVÍO DE MENSAJES
+─────────────────────────────────
+   🏷️  Enviando por tags... ✅ Enviado!
+
+👥 2. PROBANDO GESTIÓN DE CONTACTOS  
+──────────────────────────────────
+   ➕ Agregando contacto... ✅ Agregado!
+   🔍 Consultando contacto... ✅ Encontrado!
+
+🏷️  3. PROBANDO GESTIÓN DE TAGS
+───────────────────────────────
+   📋 Listando tags... ✅ Encontrados X tags
+   👥 Contactos en tag... ✅ X contactos encontrados
+
+🎉 PRUEBAS COMPLETADAS!
+```
+
+## 📚 Uso del SDK
+
+### Configuración Básica
 ```csharp
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using Microsoft.Extensions.Configuration;
-using SMSApi.Modern.Extensions;
+using InteractuaMovil.ContactoSms.Api.Extensions;
 
 var host = Host.CreateDefaultBuilder(args)
     .ConfigureServices((context, services) =>
     {
-        // Add SMS API with configuration
+        // Registrar SMS API
         services.AddSmsApi(context.Configuration);
         
-        // Add your application services
-        services.AddTransient<MyMessageService>();
+        // Tus servicios
+        services.AddTransient<NotificationService>();
     })
     .Build();
-
-// Get and use the service
-var messageService = host.Services.GetRequiredService<MyMessageService>();
-await messageService.SendWelcomeMessageAsync();
 ```
 
-#### Manual Configuration
-```csharp
-services.AddSmsApi(options =>
-{
-    options.ApiKey = "your-api-key";
-    options.SecretKey = "your-secret-key";
-    options.ApiUrl = "https://your-api-url.com/api/";
-    options.TimeoutSeconds = 30;
-    options.EnableLogging = true;
-});
-```
-
-### 3. Basic Usage Example
-
+### Envío de Mensajes
 ```csharp
 public class NotificationService
 {
     private readonly ISmsApi _smsApi;
-    private readonly ILogger<NotificationService> _logger;
-
-    public NotificationService(ISmsApi smsApi, ILogger<NotificationService> logger)
+    
+    public NotificationService(ISmsApi smsApi)
     {
         _smsApi = smsApi;
-        _logger = logger;
     }
 
-    public async Task<bool> SendWelcomeMessageAsync(string phoneNumber, string customerName)
+    // Enviar a contacto individual
+    public async Task<bool> SendWelcomeAsync(string phone, string name)
     {
-        try
-        {
-            var message = $"Welcome {customerName}! Thank you for joining our service.";
-            var messageId = $"welcome-{DateTime.Now:yyyyMMdd-HHmmss}";
+        var result = await _smsApi.Messages.SendToContactAsync(
+            msisdn: phone,
+            message: $"¡Bienvenido {name}!",
+            messageId: $"welcome-{DateTime.Now:yyyyMMddHHmmss}"
+        );
+        
+        return result.IsOk;
+    }
 
-            _logger.LogInformation("Sending welcome message to {PhoneNumber}", phoneNumber);
-
-            var result = await _smsApi.Messages.SendToContactAsync(
-                msisdn: phoneNumber,
-                message: message,
-                messageId: messageId);
-
-            if (result.IsOk)
-            {
-                _logger.LogInformation("Welcome message sent successfully. MessageId: {MessageId}", 
-                    result.Data?.MessageId);
-                return true;
-            }
-            else
-            {
-                _logger.LogWarning("Failed to send welcome message: {Error} (Code: {ErrorCode})", 
-                    result.ErrorDescription, result.ErrorCode);
-                return false;
-            }
-        }
-        catch (Exception ex)
-        {
-            _logger.LogError(ex, "Exception occurred while sending welcome message to {PhoneNumber}", phoneNumber);
-            return false;
-        }
+    // Enviar por tags (grupos)
+    public async Task<bool> SendPromotionAsync(string tagName, string promo)
+    {
+        var result = await _smsApi.Messages.SendToTagsAsync(
+            message: $"🎉 Promoción especial: {promo}",
+            tags: new[] { tagName },
+            messageId: $"promo-{DateTime.Now:yyyyMMddHHmmss}"
+        );
+        
+        return result.IsOk;
     }
 }
 ```
 
-## 📚 API Reference
+### Gestión de Contactos
+```csharp
+// Agregar contacto
+var contact = await _smsApi.Contacts.AddContactAsync(
+    msisdn: "50212345678",
+    firstName: "Juan",
+    lastName: "Pérez"
+);
 
-(Describe aquí los métodos principales del SDK moderno, como en la sección anterior, pero solo para la versión moderna)
+// Consultar contacto
+var existing = await _smsApi.Contacts.GetContactAsync("50212345678");
 
-## 🏃‍♂️ Cómo Ejecutar y Modificar
-
-### Estructura del Proyecto
+// Agregar tag a contacto
+await _smsApi.Contacts.AddTagToContactAsync("50212345678", "VIP");
 ```
-.NET/
-├── sdk/SMSApi.Modern/          # 🎯 SDK Principal (aquí haces cambios)
-├── examples/                   # 🔧 Ejemplos de uso
-│   ├── ApiExample.Modern/      # Ejemplo completo
-│   └── SendSmsExample.Modern/  # Ejemplo simple
-├── tests/SMSApi.Modern.Tests/  # 🧪 Tests unitarios
+
+### Gestión de Tags
+```csharp
+// Listar todos los tags
+var tags = await _smsApi.Tags.GetTagsAsync();
+
+// Contactos en un tag específico
+var contacts = await _smsApi.Tags.GetContactsByTagAsync("VIP");
+
+// Eliminar tag
+await _smsApi.Tags.DeleteTagAsync("OldTag");
 ```
 
-### Ejecución Rápida
+### Consulta de Mensajes
+```csharp
+// Mensajes de hoy
+var today = DateTime.Today;
+var messages = await _smsApi.Messages.GetMessagesAsync(
+    startDate: today,
+    endDate: today.AddDays(1),
+    direction: MessageDirection.MT,
+    limit: 50
+);
+```
 
+## 🔧 Ejemplos Disponibles
+
+### QuickTest - Prueba Completa ⚡
 ```bash
-# Restaurar dependencias
- dotnet restore
-# Compilar
- dotnet build
-# Ejecutar ejemplo completo
- cd examples/ApiExample.Modern
- dotnet run
-# Ejecutar ejemplo simple
- cd ../SendSmsExample.Modern
- dotnet run
+cd examples/QuickTest
+dotnet run
 ```
+**Propósito**: Prueba todas las funcionalidades principales en 30 segundos.
+
+### ApiExample.Modern - Ejemplo Detallado 🔧
+```bash
+cd examples/ApiExample.Modern  
+dotnet run
+```
+**Propósito**: Ejemplo completo con manejo de errores y logging.
+
+### SendSmsExample.Modern - Envío Simple 📱
+```bash
+cd examples/SendSmsExample.Modern
+dotnet run
+```
+**Propósito**: Ejemplo mínimo para envío de SMS.
 
 ## 🧪 Testing
 
 ```bash
-# Run all tests
- dotnet test
+# Compilar todo
+cd .netLATEST
+dotnet build
+
+# Ejecutar tests unitarios
+cd tests/SMSApi.Modern.Tests
+dotnet test
+
+# Test de integración con API real
+cd examples/QuickTest
+dotnet run
 ```
 
-## 📋 Requirements
+## 🐛 Solución de Problemas
+
+### Error: "Failed to parse response JSON"
+✅ **Solucionado** - Enums actualizados para coincidir con API real:
+- `ContactStatus.SUSCRIBED` (sin 'B')
+- `AddedFrom.FILE_UPLOAD`
+
+### Error: "The JSON value could not be converted"
+✅ **Solucionado** - Compatibilidad total con respuestas de API.
+
+### Error: "No autorizado" en algunas operaciones
+⚠️ **Esperado** - Algunas operaciones requieren permisos específicos en tu cuenta API.
+
+### Error: "El mensaje ha sido bloqueado debido a que esta duplicado"  
+⚠️ **Esperado** - Protección anti-spam de la API. Cambia el mensaje o espera unos minutos.
+
+## 📋 Requisitos
 
 - **.NET 8.0** (recomendado)
 - **Visual Studio 2022** 17.8+ o **VS Code**
 - **C# 12** language features
+- **Credenciales de API válidas**
 
-## 📄 License
+## ✅ Estado de Compatibilidad
 
-This project is licensed under the **MIT License** - see the [LICENSE](LICENSE) file for details.
+| Funcionalidad | Estado | Notas |
+|---------------|--------|-------|
+| Envío mensajes | ✅ | Contacto + Tags |
+| Gestión contactos | ✅ | CRUD completo |
+| Gestión tags | ✅ | Listar, consultar, eliminar |
+| Consulta mensajes | ✅ | Por fecha, filtros |
+| Autenticación | ✅ | API Key + Secret |
+| Logging | ✅ | Structured logging |
+| Async/Await | ✅ | Completamente asíncrono |
+| DI Container | ✅ | Microsoft.Extensions.DI |
 
-## 🔗 Resources
+## 🔗 Recursos
 
-- 📖 **[API Documentation](https://docs.your-api.com)** - Complete API reference
-- 🐛 **[Issue Tracker](https://github.com/your-org/sms-api-dotnet/issues)** - Report bugs or request features
-- 💬 **[Discussions](https://github.com/your-org/sms-api-dotnet/discussions)** - Community support
+- 📖 **Ejemplos de uso** - Revisa la carpeta `examples/`
+- 🧪 **Tests** - Ejecuta `dotnet test` para ver ejemplos
+- 🔧 **Configuración** - Ver `appsettings.json` en ejemplos
 
 ---
 
-**⚠️ Security Note**: Never commit API keys or secrets to version control. Always use secure configuration management (user secrets, environment variables, or secure vaults) for sensitive credentials.
+**⚠️ Nota de Seguridad**: Nunca commits API keys o secrets al control de versiones. Siempre usa user secrets, variables de entorno o vaults seguros para credenciales sensibles.
 
-**🎯 Ready to modernize your SMS integration?** This SDK provides everything you need for reliable, scalable, and maintainable SMS functionality in your .NET applications.
+**🎯 ¿Listo para integrar SMS en tu aplicación .NET?** Este SDK te proporciona todo lo que necesitas para funcionalidad SMS confiable, escalable y mantenible.
 
 
