@@ -25,7 +25,7 @@ var smsApi = host.Services.GetRequiredService<ISmsApi>();
 try
 {
     // 📞 CAMBIAR ESTOS VALORES SI QUIERES:
-    string phoneNumber = "5021234567890";  // Tu número de prueba
+    string phoneNumber = "50212345678";  // Tu número de prueba
     string message = $"✅ ¡Modern .NET SMS SDK funcionando perfectamente! {DateTime.Now:HH:mm:ss} 🚀";
 
     Console.WriteLine($"📤 Enviando mensaje a: {phoneNumber}");

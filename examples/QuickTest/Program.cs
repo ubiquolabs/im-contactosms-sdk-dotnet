@@ -42,7 +42,7 @@ try
     }
 
     // Get test data from configuration
-    var testPhone = configuration["TestData:TestPhoneNumber"] ?? "+50212345678";
+    var testPhone = configuration["TestData:TestPhoneNumber"] ?? "50212345678";
     var testMessage = configuration["TestData:TestMessage"] ?? "Test message";
     var testTagName = configuration["TestData:TestTagName"] ?? "TestTag";
     var testFirstName = configuration["TestData:TestContactFirstName"] ?? "Juan";
