@@ -117,7 +117,7 @@ public class MessagesServiceTests
 
         // Act
         var result = await _messagesService.SendToContactAsync(
-            "+1234567890", 
+            "50212345678", 
             "Hello, World!");
 
         // Assert
@@ -204,7 +204,7 @@ public class MessagesServiceTests
 
     [Theory]
     [InlineData(null, null, -1, -1, null, null, false, MessageDirection.MT, null)]
-    [InlineData("2024-01-01 00:00:00", "2024-01-31 23:59:59", 0, 100, "+1234567890", "test-group", true, MessageDirection.MO, "testuser")]
+    [InlineData("2024-01-01 00:00:00", "2024-01-31 23:59:59", 0, 100, "50212345678", "test-group", true, MessageDirection.MO, "testuser")]
     public async Task GetListAsync_WithDifferentParameters_ShouldBuildCorrectRequest(
         string? startDateStr, string? endDateStr, int start, int limit, 
         string? msisdn, string? shortName, bool includeRecipients, 
