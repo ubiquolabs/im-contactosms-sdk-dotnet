@@ -1,0 +1,45 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFrameworks>net48;net8.0</TargetFrameworks>
+    <LangVersion>latest</LangVersion>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+    
+    <!-- Assembly Information -->
+    <AssemblyTitle>ContactoSMS API SDK - Modern</AssemblyTitle>
+    <AssemblyDescription>Modern SDK for ContactoSMS API with async support and .NET 8 compatibility</AssemblyDescription>
+    <AssemblyCompany>Interactua Movil</AssemblyCompany>
+    <AssemblyProduct>ContactoSMS API SDK</AssemblyProduct>
+    <Copyright>Copyright © 2025</Copyright>
+    <AssemblyVersion>3.0.0.0</AssemblyVersion>
+    <FileVersion>3.0.0.0</FileVersion>
+    
+    <!-- Package Information -->
+    <PackageId>InteractuaMovil.ContactoSms.Api.Modern</PackageId>
+    <PackageVersion>3.0.0</PackageVersion>
+    <Authors>Interactua Movil</Authors>
+    <Description>Modern .NET SDK for ContactoSMS REST API with async/await support</Description>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <!-- Modern HTTP and JSON handling -->
+    <PackageReference Include="System.Text.Json" Version="8.0.5" />
+    <PackageReference Include="Microsoft.Extensions.Http" Version="8.0.0" />
+    <PackageReference Include="Microsoft.Extensions.Options" Version="8.0.0" />
+    <PackageReference Include="Microsoft.Extensions.Logging.Abstractions" Version="8.0.0" />
+    <PackageReference Include="Microsoft.Extensions.DependencyInjection.Abstractions" Version="8.0.0" />
+  </ItemGroup>
+
+  <!-- .NET Framework specific references -->
+  <ItemGroup Condition="'$(TargetFramework)' == 'net48'">
+    <Reference Include="System.Net.Http" />
+    <PackageReference Include="Microsoft.Extensions.Configuration.Binder" Version="8.0.0" />
+  </ItemGroup>
+
+  <!-- .NET 8 specific references (most are built-in) -->
+  <ItemGroup Condition="'$(TargetFramework)' == 'net8.0'">
+    <!-- Most references are built into .NET 8 -->
+  </ItemGroup>
+
+</Project> 
