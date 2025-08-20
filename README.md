@@ -16,6 +16,8 @@ Un SDK **moderno**, **completamente funcional** y **probado en producción** par
 - **📝 Structured Logging** - Microsoft.Extensions.Logging
 - **⚙️ Configuration Management** - Patrón IOptions + User Secrets
 - **🛡️ API Compatibility** - Totalmente compatible con backend real
+- **🌍 UTF-8 Full Support** - Perfect handling of special characters
+- **🤝 Cross-SDK Compatibility** - Consistent behavior with other platform SDKs
 - **🧪 Fully Tested** - Pruebas unitarias y de integración
 
 ## 🚀 Funcionalidades Implementadas

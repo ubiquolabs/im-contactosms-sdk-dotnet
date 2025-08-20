@@ -41,9 +41,9 @@ try
         return;
     }
 
-    // Get test data from configuration
+    // Get test data from configuration with UTF-8 examples
     var testPhone = configuration["TestData:TestPhoneNumber"] ?? "50212345678";
-    var testMessage = configuration["TestData:TestMessage"] ?? "Test message";
+    var testMessage = configuration["TestData:TestMessage"] ?? "¡Hola desde .NET SDK! ¿Te llegó el mensaje?";
     var testTagName = configuration["TestData:TestTagName"] ?? "TestTag";
     var testFirstName = configuration["TestData:TestContactFirstName"] ?? "Juan";
     var testLastName = configuration["TestData:TestContactLastName"] ?? "Pérez";
@@ -196,9 +196,28 @@ try
         Console.WriteLine($"❌ Error: {messagesResult.ErrorDescription}");
     }
 
+    // === 5. UTF-8 COMPATIBILITY TEST ===
+    Console.WriteLine("\n🌍 5. PROBANDO COMPATIBILIDAD UTF-8");
+    Console.WriteLine("──────────────────────────────────");
+    
+    Console.Write("   🔤 Enviando mensaje con caracteres extendidos... ");
+    var utf8Message = "Acentos: áéíóú ÁÉÍÓÚ ñÑ.";
+    var utf8Result = await smsApi.Messages.SendToContactAsync(testPhone, utf8Message, "utf8-test");
+    if (utf8Result.IsOk)
+    {
+        Console.WriteLine("✅ Enviado!");
+        Console.WriteLine($"      Mensaje UTF-8: {utf8Message}");
+        Console.WriteLine($"      ID: {utf8Result.Data?.MessageId}");
+    }
+    else
+    {
+        Console.WriteLine($"❌ Error: {utf8Result.ErrorDescription}");
+    }
+
     Console.WriteLine("\n🎉 PRUEBAS COMPLETADAS!");
     Console.WriteLine("========================");
     Console.WriteLine("✅ Si ves mensajes enviados, ¡el SDK funciona correctamente!");
+    Console.WriteLine("✅ Los caracteres UTF-8 (¡¿áéíóú) deberían enviarse perfectamente");
     Console.WriteLine("❌ Si hay errores, revisa la configuración de API en appsettings.json");
 }
 catch (Exception ex)

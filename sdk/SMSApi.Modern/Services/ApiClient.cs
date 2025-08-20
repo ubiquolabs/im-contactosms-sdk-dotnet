@@ -27,12 +27,13 @@ public class ApiClient
         _options = options?.Value ?? throw new ArgumentNullException(nameof(options));
         _logger = logger ?? throw new ArgumentNullException(nameof(logger));
 
-        // Configure JSON serialization options
+        // Configure JSON serialization options with UTF-8 support (like Python's ensure_ascii=False)
         _jsonOptions = new JsonSerializerOptions
         {
             PropertyNamingPolicy = JsonNamingPolicy.SnakeCaseLower,
             DefaultIgnoreCondition = System.Text.Json.Serialization.JsonIgnoreCondition.WhenWritingNull,
-            Converters = { new System.Text.Json.Serialization.JsonStringEnumConverter() }
+            Converters = { new System.Text.Json.Serialization.JsonStringEnumConverter() },
+            Encoder = System.Text.Encodings.Web.JavaScriptEncoder.UnsafeRelaxedJsonEscaping // Preserve UTF-8 characters
         };
 
         // Configure HTTP client
@@ -143,7 +144,7 @@ public class ApiClient
         request.Headers.Date = DateTime.Parse(date, System.Globalization.CultureInfo.InvariantCulture);
         
         // ✅ Add missing X-IM-ORIGIN header that JavaScript sends
-        request.Headers.Add("X-IM-ORIGIN", "IM_SDK_NET_V1");
+        request.Headers.Add("X-IM-ORIGIN", "IM_SDK_DOTNET_MODERN");
         
         if (_options.EnableLogging)
         {
