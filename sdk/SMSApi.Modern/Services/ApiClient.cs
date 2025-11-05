@@ -131,7 +131,7 @@ public class ApiClient
     {
         var date = DateTime.UtcNow.ToString("r");
         
-        // ✅ Use SAME canonical string structure as Java (always works)
+        // Use SAME canonical string structure as Java (always works)
         // Java: apiKey + httpDate + filters + jsonText
         var canonical = $"{_options.ApiKey}{date}{queryString}{bodyData}";
 
@@ -143,7 +143,7 @@ public class ApiClient
         request.Headers.Authorization = AuthenticationHeaderValue.Parse(authHeader);
         request.Headers.Date = DateTime.Parse(date, System.Globalization.CultureInfo.InvariantCulture);
         
-        // ✅ Add missing X-IM-ORIGIN header that JavaScript sends
+        // Add missing X-IM-ORIGIN header that JavaScript sends
         request.Headers.Add("X-IM-ORIGIN", "IM_SDK_DOTNET_MODERN");
         
         if (_options.EnableLogging)
@@ -212,7 +212,7 @@ public class ApiClient
 
             _logger.LogWarning("API error: {StatusCode} - {Error}", response.StatusCode, apiResponse.ErrorDescription);
             
-            // 🔍 DEBUG: Log full response details for 500 errors
+            // DEBUG: Log full response details for 500 errors
             if (response.StatusCode == HttpStatusCode.InternalServerError)
             {
                 Console.WriteLine("=== 500 ERROR DETAILS ===");
@@ -238,7 +238,7 @@ public class ApiClient
     {
         if (parameters == null || parameters.Count == 0) return string.Empty;
 
-        // ✅ Sort parameters alphabetically like Java SDK
+        // Sort parameters alphabetically like Java SDK
         var pairs = parameters
             .OrderBy(kvp => kvp.Key)
             .Select(kvp => $"{UrlEncodeCustomStyle(kvp.Key)}={UrlEncodeCustomStyle(kvp.Value)}");

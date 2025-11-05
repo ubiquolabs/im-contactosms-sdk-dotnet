@@ -12,7 +12,7 @@ class Program
 {
     static async Task Main(string[] args)
     {
-        Console.WriteLine("🚀 Modern SMS API SDK Example");
+        Console.WriteLine("Modern SMS API SDK Example");
         Console.WriteLine("============================");
 
         // Build configuration
@@ -50,7 +50,7 @@ class Program
         }
         catch (Exception ex)
         {
-            Console.WriteLine($"❌ Error: {ex.Message}");
+            Console.WriteLine($"Error: {ex.Message}");
             if (ex.InnerException != null)
             {
                 Console.WriteLine($"   Inner: {ex.InnerException.Message}");
@@ -86,12 +86,12 @@ public class SmsApiExampleService
 
     public async Task RunAllExamplesAsync()
     {
-        Console.WriteLine("\n📋 Running SMS API Examples...\n");
+        Console.WriteLine("\nRunning SMS API Examples...\n");
 
         // Check configuration
         if (!ValidateConfiguration())
         {
-            Console.WriteLine("⚠️  Please update appsettings.json with valid API credentials");
+            Console.WriteLine("Please update appsettings.json with valid API credentials");
             Console.WriteLine("   Update the TestData section with your test values");
             return;
         }
@@ -125,7 +125,7 @@ public class SmsApiExampleService
             return false;
         }
 
-        Console.WriteLine("✅ Configuration validated");
+        Console.WriteLine("Configuration validated");
         return true;
     }
 
@@ -133,7 +133,7 @@ public class SmsApiExampleService
 
     private async Task TestGroupsAsync()
     {
-        Console.WriteLine("\n👥 Testing Groups Functionality");
+        Console.WriteLine("\nTesting Groups Functionality");
         Console.WriteLine("==============================");
 
         try
@@ -164,153 +164,153 @@ public class SmsApiExampleService
         }
         catch (Exception ex)
         {
-            Console.WriteLine($"❌ Groups test failed: {ex.Message}");
+            Console.WriteLine($"Groups test failed: {ex.Message}");
             _logger.LogError(ex, "Error in groups tests");
         }
     }
 
     private async Task GetGroupListAsync()
     {
-        Console.WriteLine("\n📋 Getting Group List...");
+        Console.WriteLine("\nGetting Group List...");
         
         var groups = await _smsApi.Groups.GetListAsync();
         
         if (groups.IsOk)
         {
-            Console.WriteLine($"✅ Found {groups.Data?.Count ?? 0} groups:");
+            Console.WriteLine($"Found {groups.Data?.Count ?? 0} groups:");
             if (groups.Data?.Count > 0)
             {
                 foreach (var group in groups.Data)
                 {
-                    Console.WriteLine($"   📁 {group.Name} (Short: {group.ShortName})");
+                    Console.WriteLine($"   {group.Name} (Short: {group.ShortName})");
                 }
             }
         }
         else
         {
-            Console.WriteLine($"❌ Error: {groups.ErrorDescription}");
+            Console.WriteLine($"Error: {groups.ErrorDescription}");
         }
     }
 
     private async Task AddGroupAsync()
     {
-        Console.WriteLine($"\n➕ Adding Group: {_testGroupName}...");
+        Console.WriteLine($"\n Adding Group: {_testGroupName}...");
         
         var result = await _smsApi.Groups.AddAsync(_testGroupName, "Test Group", "Group for testing purposes");
         
         if (result.IsOk)
         {
-            Console.WriteLine($"✅ Group '{_testGroupName}' added successfully");
+            Console.WriteLine($" Group '{_testGroupName}' added successfully");
         }
         else
         {
-            Console.WriteLine($"❌ Error: {result.ErrorDescription}");
+            Console.WriteLine($" Error: {result.ErrorDescription}");
         }
     }
 
     private async Task GetGroupAsync()
     {
-        Console.WriteLine($"\n🔍 Getting Group: {_testGroupName}...");
+        Console.WriteLine($"\n Getting Group: {_testGroupName}...");
         
         var group = await _smsApi.Groups.GetAsync(_testGroupName);
         
         if (group.IsOk)
         {
-            Console.WriteLine($"✅ Group found:");
+            Console.WriteLine($" Group found:");
             Console.WriteLine($"   Name: {group.Data?.Name}");
             Console.WriteLine($"   Short Name: {group.Data?.ShortName}");
             Console.WriteLine($"   Description: {group.Data?.Description}");
         }
         else
         {
-            Console.WriteLine($"❌ Error: {group.ErrorDescription}");
+            Console.WriteLine($" Error: {group.ErrorDescription}");
         }
     }
 
     private async Task AddContactToGroupAsync()
     {
-        Console.WriteLine($"\n➕ Adding Contact {_testPhoneNumber} to Group {_testGroupName}...");
+        Console.WriteLine($"\n Adding Contact {_testPhoneNumber} to Group {_testGroupName}...");
         
         var result = await _smsApi.Groups.AddContactAsync(_testGroupName, _testPhoneNumber);
         
         if (result.IsOk)
         {
-            Console.WriteLine($"✅ Contact added to group successfully");
+            Console.WriteLine($" Contact added to group successfully");
         }
         else
         {
-            Console.WriteLine($"❌ Error: {result.ErrorDescription}");
+            Console.WriteLine($" Error: {result.ErrorDescription}");
         }
     }
 
     private async Task GetContactListByGroupAsync()
     {
-        Console.WriteLine($"\n📋 Getting Contacts in Group: {_testGroupName}...");
+        Console.WriteLine($"\n Getting Contacts in Group: {_testGroupName}...");
         
         var contacts = await _smsApi.Groups.GetContactListAsync(_testGroupName);
         
         if (contacts.IsOk)
         {
-            Console.WriteLine($"✅ Found {contacts.Data?.Count ?? 0} contacts in group:");
+            Console.WriteLine($" Found {contacts.Data?.Count ?? 0} contacts in group:");
             if (contacts.Data?.Count > 0)
             {
                 foreach (var contact in contacts.Data)
                 {
-                    Console.WriteLine($"   👤 {contact.FirstName} {contact.LastName} - {contact.PhoneNumber}");
+                    Console.WriteLine($"    {contact.FirstName} {contact.LastName} - {contact.PhoneNumber}");
                 }
             }
         }
         else
         {
-            Console.WriteLine($"❌ Error: {contacts.ErrorDescription}");
+            Console.WriteLine($" Error: {contacts.ErrorDescription}");
         }
     }
 
     private async Task RemoveContactFromGroupAsync()
     {
-        Console.WriteLine($"\n➖ Removing Contact {_testPhoneNumber} from Group {_testGroupName}...");
+        Console.WriteLine($"\n Removing Contact {_testPhoneNumber} from Group {_testGroupName}...");
         
         var result = await _smsApi.Groups.RemoveContactAsync(_testGroupName, _testPhoneNumber);
         
         if (result.IsOk)
         {
-            Console.WriteLine($"✅ Contact removed from group successfully");
+            Console.WriteLine($" Contact removed from group successfully");
         }
         else
         {
-            Console.WriteLine($"❌ Error: {result.ErrorDescription}");
+            Console.WriteLine($" Error: {result.ErrorDescription}");
         }
     }
 
     private async Task UpdateGroupAsync()
     {
-        Console.WriteLine($"\n✏️  Updating Group: {_testGroupName}...");
+        Console.WriteLine($"\n  Updating Group: {_testGroupName}...");
         
         var result = await _smsApi.Groups.UpdateAsync(_testGroupName, "Updated Test Group", "Updated group description");
         
         if (result.IsOk)
         {
-            Console.WriteLine($"✅ Group updated successfully");
+            Console.WriteLine($" Group updated successfully");
         }
         else
         {
-            Console.WriteLine($"❌ Error: {result.ErrorDescription}");
+            Console.WriteLine($" Error: {result.ErrorDescription}");
         }
     }
 
     private async Task DeleteGroupAsync()
     {
-        Console.WriteLine($"\n🗑️  Deleting Group: {_testGroupName}...");
+        Console.WriteLine($"\n  Deleting Group: {_testGroupName}...");
         
         var result = await _smsApi.Groups.DeleteAsync(_testGroupName);
         
         if (result.IsOk)
         {
-            Console.WriteLine($"✅ Group deleted successfully");
+            Console.WriteLine($" Group deleted successfully");
         }
         else
         {
-            Console.WriteLine($"❌ Error: {result.ErrorDescription}");
+            Console.WriteLine($" Error: {result.ErrorDescription}");
         }
     }
 
@@ -320,7 +320,7 @@ public class SmsApiExampleService
 
     private async Task TestContactsAsync()
     {
-        Console.WriteLine("\n👤 Testing Contacts Functionality");
+        Console.WriteLine("\n Testing Contacts Functionality");
         Console.WriteLine("================================");
 
         try
@@ -333,44 +333,44 @@ public class SmsApiExampleService
         }
         catch (Exception ex)
         {
-            Console.WriteLine($"❌ Contacts test failed: {ex.Message}");
+            Console.WriteLine($" Contacts test failed: {ex.Message}");
             _logger.LogError(ex, "Error in contacts tests");
         }
     }
 
     private async Task CreateNewContactAsync()
     {
-        Console.WriteLine($"\n➕ Creating Contact: {_testFirstName} {_testLastName} ({_testPhoneNumber})...");
+        Console.WriteLine($"\n Creating Contact: {_testFirstName} {_testLastName} ({_testPhoneNumber})...");
         
         var contact = await _smsApi.Contacts.AddAsync("502", _testPhoneNumber, _testFirstName, _testLastName);
         
         if (contact.IsOk)
         {
-            Console.WriteLine($"✅ Contact created successfully:");
+            Console.WriteLine($" Contact created successfully:");
             Console.WriteLine($"   Phone: {contact.Data?.PhoneNumber}");
             Console.WriteLine($"   Name: {contact.Data?.FirstName} {contact.Data?.LastName}");
         }
         else
         {
-            Console.WriteLine($"❌ Error: {contact.ErrorDescription}");
+            Console.WriteLine($" Error: {contact.ErrorDescription}");
         }
     }
 
     private async Task GetContactByPhoneNumberAsync()
     {
-        Console.WriteLine($"\n🔍 Getting Contact: {_testPhoneNumber}...");
+        Console.WriteLine($"\n Getting Contact: {_testPhoneNumber}...");
         
         var contact = await _smsApi.Contacts.GetByMsisdnAsync(_testPhoneNumber);
         
         if (contact.IsOk)
         {
-            Console.WriteLine($"✅ Contact found:");
+            Console.WriteLine($" Contact found:");
             Console.WriteLine($"   Phone: {contact.Data?.PhoneNumber}");
             Console.WriteLine($"   Name: {contact.Data?.FirstName} {contact.Data?.LastName}");
         }
         else
         {
-            Console.WriteLine($"❌ Error: {contact.ErrorDescription}");
+            Console.WriteLine($" Error: {contact.ErrorDescription}");
         }
     }
 
@@ -380,7 +380,7 @@ public class SmsApiExampleService
 
     private async Task TestMessagesAsync()
     {
-        Console.WriteLine("\n📨 Testing Messages Functionality");
+        Console.WriteLine("\n Testing Messages Functionality");
         Console.WriteLine("=================================");
 
         try
@@ -399,7 +399,7 @@ public class SmsApiExampleService
         }
         catch (Exception ex)
         {
-            Console.WriteLine($"❌ Messages test failed: {ex.Message}");
+            Console.WriteLine($" Messages test failed: {ex.Message}");
             _logger.LogError(ex, "Error in messages tests");
         }
     }
@@ -409,7 +409,7 @@ public class SmsApiExampleService
         var messageId = Guid.NewGuid().ToString("N")[..8];
         var message = "Hello from Modern SMS API SDK!";
         
-        Console.WriteLine($"\n📤 Sending Message to Contact: {_testPhoneNumber}...");
+        Console.WriteLine($"\n Sending Message to Contact: {_testPhoneNumber}...");
         Console.WriteLine($"   Message: {message}");
         Console.WriteLine($"   ID: {messageId}");
         
@@ -417,13 +417,13 @@ public class SmsApiExampleService
         
         if (response.IsOk)
         {
-            Console.WriteLine($"✅ Message sent successfully:");
+            Console.WriteLine($" Message sent successfully:");
             Console.WriteLine($"   Sent Count: {response.Data?.SentCount}");
             Console.WriteLine($"   Message: {response.Data?.Message}");
         }
         else
         {
-            Console.WriteLine($"❌ Error: {response.ErrorDescription}");
+            Console.WriteLine($" Error: {response.ErrorDescription}");
         }
     }
 
@@ -432,7 +432,7 @@ public class SmsApiExampleService
         var messageId = Guid.NewGuid().ToString("N")[..8];
         var message = "Hello Group from Modern SMS API SDK!";
         
-        Console.WriteLine($"\n📤 Sending Message to Group: {_testGroupName}...");
+        Console.WriteLine($"\n Sending Message to Group: {_testGroupName}...");
         Console.WriteLine($"   Message: {message}");
         Console.WriteLine($"   ID: {messageId}");
         
@@ -440,13 +440,13 @@ public class SmsApiExampleService
         
         if (response.IsOk)
         {
-            Console.WriteLine($"✅ Message sent successfully:");
+            Console.WriteLine($" Message sent successfully:");
             Console.WriteLine($"   Sent Count: {response.Data?.SentCount}");
             Console.WriteLine($"   Message: {response.Data?.Message}");
         }
         else
         {
-            Console.WriteLine($"❌ Error: {response.ErrorDescription}");
+            Console.WriteLine($" Error: {response.ErrorDescription}");
         }
     }
 
@@ -456,7 +456,7 @@ public class SmsApiExampleService
         var message = "Hello Tags from Modern SMS API SDK!";
         var tags = new[] { "customers", "vip", "test" };
         
-        Console.WriteLine($"\n🏷️  Sending Message to Tags: {string.Join(", ", tags)}...");
+        Console.WriteLine($"\n  Sending Message to Tags: {string.Join(", ", tags)}...");
         Console.WriteLine($"   Message: {message}");
         Console.WriteLine($"   ID: {messageId}");
         
@@ -464,19 +464,19 @@ public class SmsApiExampleService
         
         if (response.IsOk)
         {
-            Console.WriteLine($"✅ Message sent successfully to tags:");
+            Console.WriteLine($" Message sent successfully to tags:");
             Console.WriteLine($"   Sent Count: {response.Data?.SentCount}");
             Console.WriteLine($"   Message: {response.Data?.Message}");
         }
         else
         {
-            Console.WriteLine($"❌ Error: {response.ErrorDescription}");
+            Console.WriteLine($" Error: {response.ErrorDescription}");
         }
     }
 
     private async Task GetMessageLogAsync()
     {
-        Console.WriteLine($"\n📋 Getting Message Log (last 24 hours)...");
+        Console.WriteLine($"\n Getting Message Log (last 24 hours)...");
         
         // Use a smaller time window to reduce data load
         var response = await _smsApi.Messages.GetListWithDeliveryStatusAsync(
@@ -489,21 +489,21 @@ public class SmsApiExampleService
         
         if (response.IsOk)
         {
-            Console.WriteLine($"✅ Found {response.Data?.Count ?? 0} messages:");
+            Console.WriteLine($" Found {response.Data?.Count ?? 0} messages:");
             if (response.Data?.Count > 0)
             {
                 foreach (var msg in response.Data.Take(3))
                 {
-                    Console.WriteLine($"   📨 {msg.MessageId}: {msg.Message?[..Math.Min(50, msg.Message.Length)]}...");
+                    Console.WriteLine($"    {msg.MessageId}: {msg.Message?[..Math.Min(50, msg.Message.Length)]}...");
                 }
             }
         }
         else
         {
-            Console.WriteLine($"❌ Error: {response.ErrorDescription}");
+            Console.WriteLine($" Error: {response.ErrorDescription}");
             
             // Try with an even smaller window if it failed
-            Console.WriteLine($"\n🔄 Trying with smaller time window (last 2 hours)...");
+            Console.WriteLine($"\n Trying with smaller time window (last 2 hours)...");
             var fallbackResponse = await _smsApi.Messages.GetListWithDeliveryStatusAsync(
                 startDate: DateTime.Now.AddHours(-2),
                 endDate: DateTime.Now,
@@ -514,18 +514,18 @@ public class SmsApiExampleService
             
             if (fallbackResponse.IsOk)
             {
-                Console.WriteLine($"✅ Fallback successful - Found {fallbackResponse.Data?.Count ?? 0} messages:");
+                Console.WriteLine($" Fallback successful - Found {fallbackResponse.Data?.Count ?? 0} messages:");
                 if (fallbackResponse.Data?.Count > 0)
                 {
                     foreach (var msg in fallbackResponse.Data)
                     {
-                        Console.WriteLine($"   📨 {msg.MessageId}: {msg.Message?[..Math.Min(50, msg.Message.Length)]}...");
+                        Console.WriteLine($"    {msg.MessageId}: {msg.Message?[..Math.Min(50, msg.Message.Length)]}...");
                     }
                 }
             }
             else
             {
-                Console.WriteLine($"❌ Fallback also failed: {fallbackResponse.ErrorDescription}");
+                Console.WriteLine($" Fallback also failed: {fallbackResponse.ErrorDescription}");
             }
         }
     }
@@ -536,7 +536,7 @@ public class SmsApiExampleService
 
     private async Task TestSendSmsAsync()
     {
-        Console.WriteLine("\n📱 Testing SMS Sending");
+        Console.WriteLine("\n Testing SMS Sending");
         Console.WriteLine("======================");
 
         try
@@ -545,7 +545,7 @@ public class SmsApiExampleService
             var testMessage = _configuration["TestData:TestMessage"] ?? "Hello from Modern SMS API SDK!";
             var messageId = Guid.NewGuid().ToString("N")[..8];
 
-            Console.WriteLine($"📤 Sending test SMS to: {testPhone}");
+            Console.WriteLine($" Sending test SMS to: {testPhone}");
             Console.WriteLine($"   Message: {testMessage}");
             Console.WriteLine($"   ID: {messageId}");
 
@@ -553,18 +553,18 @@ public class SmsApiExampleService
 
             if (response.IsOk)
             {
-                Console.WriteLine($"✅ SMS sent successfully!");
+                Console.WriteLine($" SMS sent successfully!");
                 Console.WriteLine($"   Sent Count: {response.Data?.SentCount}");
                 Console.WriteLine($"   Message ID: {response.Data?.MessageId}");
             }
             else
             {
-                Console.WriteLine($"❌ SMS sending failed: {response.ErrorDescription}");
+                Console.WriteLine($" SMS sending failed: {response.ErrorDescription}");
             }
         }
         catch (Exception ex)
         {
-            Console.WriteLine($"❌ SMS test failed: {ex.Message}");
+            Console.WriteLine($" SMS test failed: {ex.Message}");
             _logger.LogError(ex, "Error in SMS test");
         }
     }
@@ -575,32 +575,32 @@ public class SmsApiExampleService
 
     private async Task TestErrorHandlingAsync()
     {
-        Console.WriteLine("\n⚠️  Testing Error Handling");
+        Console.WriteLine("\n  Testing Error Handling");
         Console.WriteLine("=========================");
 
         try
         {
             // Test with invalid phone number
-            Console.WriteLine("\n🔍 Testing with invalid phone number...");
+            Console.WriteLine("\n Testing with invalid phone number...");
             var invalidResponse = await _smsApi.Messages.SendToContactAsync("invalid-phone", "Test message", "test-id");
             
             if (!invalidResponse.IsOk)
             {
-                Console.WriteLine($"✅ Error handling works: {invalidResponse.ErrorDescription}");
+                Console.WriteLine($" Error handling works: {invalidResponse.ErrorDescription}");
             }
 
             // Test with invalid group
-            Console.WriteLine("\n🔍 Testing with invalid group...");
+            Console.WriteLine("\n Testing with invalid group...");
             var invalidGroupResponse = await _smsApi.Groups.GetAsync("non-existent-group");
             
             if (!invalidGroupResponse.IsOk)
             {
-                Console.WriteLine($"✅ Error handling works: {invalidGroupResponse.ErrorDescription}");
+                Console.WriteLine($" Error handling works: {invalidGroupResponse.ErrorDescription}");
             }
         }
         catch (Exception ex)
         {
-            Console.WriteLine($"❌ Error handling test failed: {ex.Message}");
+            Console.WriteLine($" Error handling test failed: {ex.Message}");
             _logger.LogError(ex, "Error in error handling test");
         }
     }

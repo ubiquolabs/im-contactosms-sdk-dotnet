@@ -6,7 +6,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 
-Console.WriteLine("🚀 SMS API .NET SDK - Quick Test");
+Console.WriteLine("SMS API .NET SDK - Quick Test");
 Console.WriteLine("=================================\n");
 
 // Build configuration
@@ -37,8 +37,8 @@ try
     // Validate configuration
     if (!ValidateConfiguration(configuration))
     {
-        Console.WriteLine("❌ Configuración inválida. Por favor actualiza appsettings.json");
-        Console.WriteLine("   o usa: dotnet user-secrets set \"SmsApi:ApiKey\" \"tu-api-key\"");
+        Console.WriteLine("Invalid configuration. Please update appsettings.json");
+        Console.WriteLine("   or use: dotnet user-secrets set \"SmsApi:ApiKey\" \"your-api-key\"");
         return;
     }
 
@@ -49,93 +49,93 @@ try
     var testFirstName = configuration["TestData:TestContactFirstName"] ?? "Juan";
     var testLastName = configuration["TestData:TestContactLastName"] ?? "Pérez";
 
-    Console.WriteLine("📱 Datos de prueba:");
-    Console.WriteLine($"   Teléfono: {testPhone}");
-    Console.WriteLine($"   Mensaje: {testMessage}");
+    Console.WriteLine("Test Data:");
+    Console.WriteLine($"   Phone: {testPhone}");
+    Console.WriteLine($"   Message: {testMessage}");
     Console.WriteLine($"   Tag: {testTagName}\n");
 
     // === 1. TEST MESSAGES ===
-    Console.WriteLine("💬 1. PROBANDO ENVÍO DE MENSAJES");
+    Console.WriteLine("1. TESTING MESSAGE SENDING");
     Console.WriteLine("─────────────────────────────────");
     
     // Send to contact
-    Console.Write("   📞 Enviando a contacto... ");
+    Console.Write("   Sending to contact... ");
     var messageResult = await smsApi.Messages.SendToContactAsync(testPhone, testMessage);
     if (messageResult.IsOk)
     {
-        Console.WriteLine("✅ Enviado!");
+        Console.WriteLine("Sent!");
         Console.WriteLine($"      ID: {messageResult.Data?.MessageId}");
     }
     else
     {
-        Console.WriteLine($"❌ Error: {messageResult.ErrorDescription}");
+        Console.WriteLine($"Error: {messageResult.ErrorDescription}");
     }
 
     // Send to tags
-    Console.Write("   🏷️  Enviando por tags... ");
+    Console.Write("   Sending to tags... ");
     var tagsResult = await smsApi.Messages.SendToTagsAsync(new[] { testTagName }, testMessage);
     if (tagsResult.IsOk)
     {
-        Console.WriteLine("✅ Enviado!");
+        Console.WriteLine("Sent!");
         Console.WriteLine($"      ID: {tagsResult.Data?.MessageId}");
     }
     else
     {
-        Console.WriteLine($"❌ Error: {tagsResult.ErrorDescription}");
+        Console.WriteLine($"Error: {tagsResult.ErrorDescription}");
     }
 
     // === 2. TEST CONTACTS ===
-    Console.WriteLine("\n👥 2. PROBANDO GESTIÓN DE CONTACTOS");
+    Console.WriteLine("\n2. TESTING CONTACT MANAGEMENT");
     Console.WriteLine("──────────────────────────────────");
     
     // Add contact
-    Console.Write("   ➕ Agregando contacto... ");
+    Console.Write("   Adding contact... ");
     var contactResult = await smsApi.Contacts.AddAsync("502", testPhone, testFirstName, testLastName);
     if (contactResult.IsOk)
     {
-        Console.WriteLine("✅ Agregado!");
-        Console.WriteLine($"      Nombre: {contactResult.Data?.FirstName} {contactResult.Data?.LastName}");
+        Console.WriteLine("Added!");
+        Console.WriteLine($"      Name: {contactResult.Data?.FirstName} {contactResult.Data?.LastName}");
     }
     else
     {
-        Console.WriteLine($"❌ Error: {contactResult.ErrorDescription}");
+        Console.WriteLine($"Error: {contactResult.ErrorDescription}");
     }
 
     // Get contact
-    Console.Write("   🔍 Consultando contacto... ");
+    Console.Write("   Getting contact... ");
     var getContactResult = await smsApi.Contacts.GetByMsisdnAsync(testPhone);
     if (getContactResult.IsOk)
     {
-        Console.WriteLine("✅ Encontrado!");
-        Console.WriteLine($"      Estado: {getContactResult.Data?.Status}");
+        Console.WriteLine("Found!");
+        Console.WriteLine($"      Status: {getContactResult.Data?.Status}");
     }
     else
     {
-        Console.WriteLine($"❌ Error: {getContactResult.ErrorDescription}");
+        Console.WriteLine($"Error: {getContactResult.ErrorDescription}");
     }
 
     // Add tag to contact
-    Console.Write("   🏷️  Agregando tag al contacto... ");
+    Console.Write("   Adding tag to contact... ");
     var addTagResult = await smsApi.Contacts.AddTagAsync(testPhone, testTagName);
     if (addTagResult.IsOk)
     {
-        Console.WriteLine("✅ Tag agregado!");
+        Console.WriteLine("Tag added!");
     }
     else
     {
-        Console.WriteLine($"❌ Error: {addTagResult.ErrorDescription}");
+        Console.WriteLine($"Error: {addTagResult.ErrorDescription}");
     }
 
     // === 3. TEST TAGS ===
-    Console.WriteLine("\n🏷️  3. PROBANDO GESTIÓN DE TAGS");
+    Console.WriteLine("\n3. TESTING TAG MANAGEMENT");
     Console.WriteLine("───────────────────────────────");
     
     // Get tags list
-    Console.Write("   📋 Listando tags... ");
+    Console.Write("   Listing tags... ");
     var tagsListResult = await smsApi.Tags.GetListAsync();
     if (tagsListResult.IsOk)
     {
-        Console.WriteLine($"✅ Encontrados {tagsListResult.Data?.Count ?? 0} tags");
+        Console.WriteLine($"Found {tagsListResult.Data?.Count ?? 0} tags");
         if (tagsListResult.Data?.Count > 0)
         {
             foreach (var tag in tagsListResult.Data.Take(3))
@@ -146,27 +146,27 @@ try
     }
     else
     {
-        Console.WriteLine($"❌ Error: {tagsListResult.ErrorDescription}");
+        Console.WriteLine($"Error: {tagsListResult.ErrorDescription}");
     }
 
     // Get contacts in tag
-    Console.Write($"   👥 Contactos en tag '{testTagName}'... ");
+    Console.Write($"   Contacts in tag '{testTagName}'... ");
     var tagContactsResult = await smsApi.Tags.GetContactListAsync(testTagName);
     if (tagContactsResult.IsOk)
     {
-        Console.WriteLine($"✅ {tagContactsResult.Data?.Count ?? 0} contactos encontrados");
+        Console.WriteLine($"{tagContactsResult.Data?.Count ?? 0} contacts found");
     }
     else
     {
-        Console.WriteLine($"❌ Error: {tagContactsResult.ErrorDescription}");
+        Console.WriteLine($"Error: {tagContactsResult.ErrorDescription}");
     }
 
     // === 4. TEST MESSAGE RETRIEVAL ===
-    Console.WriteLine("\n📊 4. PROBANDO CONSULTA DE MENSAJES");
+    Console.WriteLine("\n4. TESTING MESSAGE QUERY");
     Console.WriteLine("──────────────────────────────────");
     
-    Console.Write("   📜 Consultando mensajes (JavaScript dates)... ");
-    // ✅ Usar exactamente las mismas fechas que JavaScript que funciona
+    Console.Write("   Querying messages... ");
+    // Use exact same dates as JavaScript that works
     var startDate = new DateTime(2025, 7, 1);   // "2025-07-01"
     var endDate = new DateTime(2025, 7, 4);     // "2025-07-04" 
     var messagesResult = await smsApi.Messages.GetListAsync(
@@ -176,7 +176,7 @@ try
     
     if (messagesResult.IsOk)
     {
-        Console.WriteLine($"✅ {messagesResult.Data?.Count ?? 0} mensajes encontrados");
+        Console.WriteLine($"{messagesResult.Data?.Count ?? 0} messages found");
         if (messagesResult.Data?.Count > 0)
         {
             foreach (var msg in messagesResult.Data)
@@ -194,33 +194,33 @@ try
     }
     else
     {
-        Console.WriteLine($"❌ Error: {messagesResult.ErrorDescription}");
+        Console.WriteLine($"Error: {messagesResult.ErrorDescription}");
     }
 
     // === 5. UTF-8 COMPATIBILITY TEST ===
-    Console.WriteLine("\n🌍 5. PROBANDO COMPATIBILIDAD UTF-8");
+    Console.WriteLine("\n5. TESTING UTF-8 COMPATIBILITY");
     Console.WriteLine("──────────────────────────────────");
     
-    Console.Write("   🔤 Enviando mensaje con caracteres extendidos... ");
+    Console.Write("   Sending message with extended characters... ");
     var utf8Message = "Acentos: áéíóú ÁÉÍÓÚ ñÑ.";
     var utf8Result = await smsApi.Messages.SendToContactAsync(testPhone, utf8Message, "utf8-test");
     if (utf8Result.IsOk)
     {
-        Console.WriteLine("✅ Enviado!");
-        Console.WriteLine($"      Mensaje UTF-8: {utf8Message}");
+        Console.WriteLine("Sent!");
+        Console.WriteLine($"      UTF-8 Message: {utf8Message}");
         Console.WriteLine($"      ID: {utf8Result.Data?.MessageId}");
     }
     else
     {
-        Console.WriteLine($"❌ Error: {utf8Result.ErrorDescription}");
+        Console.WriteLine($"Error: {utf8Result.ErrorDescription}");
     }
 
     // === 6. TEST SHORTLINKS ===
-    Console.WriteLine("\n🔗 6. PROBANDO GESTIÓN DE SHORTLINKS");
+    Console.WriteLine("\n6. TESTING SHORTLINK MANAGEMENT");
     Console.WriteLine("──────────────────────────────────");
     
     // Create shortlink
-    Console.Write("   ➕ Creando shortlink... ");
+    Console.Write("   Creating shortlink... ");
     var createShortlinkResult = await smsApi.Shortlinks.CreateAsync(
         longUrl: "https://www.example.com/very-long-url-with-parameters",
         name: "Test Shortlink",
@@ -228,7 +228,7 @@ try
     );
     if (createShortlinkResult.IsOk && createShortlinkResult.Data != null)
     {
-        Console.WriteLine("✅ Creado!");
+        Console.WriteLine("Created!");
         Console.WriteLine($"      ID: {createShortlinkResult.Data.Id}");
         Console.WriteLine($"      Short URL: {createShortlinkResult.Data.ShortUrl}");
         Console.WriteLine($"      Long URL: {createShortlinkResult.Data.LongUrl}");
@@ -236,41 +236,41 @@ try
         var shortlinkId = createShortlinkResult.Data.Id;
         
         // Get by ID
-        Console.Write($"   🔍 Consultando shortlink por ID... ");
+        Console.Write($"   Getting shortlink by ID... ");
         var getShortlinkResult = await smsApi.Shortlinks.GetByIdAsync(shortlinkId);
         if (getShortlinkResult.IsOk)
         {
-            Console.WriteLine("✅ Encontrado!");
+            Console.WriteLine("Found!");
             Console.WriteLine($"      Status: {getShortlinkResult.Data?.Status}");
         }
         else
         {
-            Console.WriteLine($"❌ Error: {getShortlinkResult.ErrorDescription}");
+            Console.WriteLine($"Error: {getShortlinkResult.ErrorDescription}");
         }
         
         // Update status
-        Console.Write($"   🔄 Actualizando estado a INACTIVE... ");
+        Console.Write($"   Updating status to INACTIVE... ");
         var updateStatusResult = await smsApi.Shortlinks.UpdateStatusAsync(shortlinkId, ShortlinkStatus.INACTIVE);
         if (updateStatusResult.IsOk)
         {
-            Console.WriteLine("✅ Actualizado!");
+            Console.WriteLine("Updated!");
         }
         else
         {
-            Console.WriteLine($"❌ Error: {updateStatusResult.ErrorDescription}");
+            Console.WriteLine($"Error: {updateStatusResult.ErrorDescription}");
         }
     }
     else
     {
-        Console.WriteLine($"❌ Error: {createShortlinkResult.ErrorDescription}");
+        Console.WriteLine($"Error: {createShortlinkResult.ErrorDescription}");
     }
     
     // List shortlinks
-    Console.Write("   📋 Listando shortlinks... ");
+    Console.Write("   Listing shortlinks... ");
     var listShortlinksResult = await smsApi.Shortlinks.GetListAsync(limit: 10);
     if (listShortlinksResult.IsOk)
     {
-        Console.WriteLine($"✅ {listShortlinksResult.Data?.Count ?? 0} shortlinks encontrados");
+        Console.WriteLine($"{listShortlinksResult.Data?.Count ?? 0} shortlinks found");
         if (listShortlinksResult.Data?.Count > 0)
         {
             foreach (var sl in listShortlinksResult.Data.Take(3))
@@ -281,25 +281,25 @@ try
     }
     else
     {
-        Console.WriteLine($"❌ Error: {listShortlinksResult.ErrorDescription}");
+        Console.WriteLine($"Error: {listShortlinksResult.ErrorDescription}");
     }
 
-    Console.WriteLine("\n🎉 PRUEBAS COMPLETADAS!");
+    Console.WriteLine("\nTESTS COMPLETED!");
     Console.WriteLine("========================");
-    Console.WriteLine("✅ Si ves mensajes enviados, ¡el SDK funciona correctamente!");
-    Console.WriteLine("✅ Los caracteres UTF-8 (¡¿áéíóú) deberían enviarse perfectamente");
-    Console.WriteLine("❌ Si hay errores, revisa la configuración de API en appsettings.json");
+    Console.WriteLine("If you see messages sent, the SDK is working correctly!");
+    Console.WriteLine("UTF-8 characters (¡¿áéíóú) should be sent perfectly");
+    Console.WriteLine("If there are errors, check the API configuration in appsettings.json");
 }
 catch (Exception ex)
 {
-    Console.WriteLine($"\n💥 ERROR GENERAL: {ex.Message}");
+    Console.WriteLine($"\nGENERAL ERROR: {ex.Message}");
     if (ex.InnerException != null)
     {
-        Console.WriteLine($"   Detalle: {ex.InnerException.Message}");
+        Console.WriteLine($"   Detail: {ex.InnerException.Message}");
     }
 }
 
-Console.WriteLine("\nPresiona cualquier tecla para salir...");
+Console.WriteLine("\nPress any key to exit...");
 Console.ReadKey();
 
 static bool ValidateConfiguration(IConfiguration configuration)

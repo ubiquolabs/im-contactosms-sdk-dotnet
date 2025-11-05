@@ -4,8 +4,8 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 
-// 🚀 Ejemplo Simple: Enviar SMS con el Modern SDK
-Console.WriteLine("📱 Enviando SMS con Modern SMS API SDK");
+// Simple Example: Send SMS with Modern SDK
+Console.WriteLine("Sending SMS with Modern SMS API SDK");
 Console.WriteLine("=====================================");
 
 // Configuración desde appsettings.json
@@ -24,53 +24,53 @@ var smsApi = host.Services.GetRequiredService<ISmsApi>();
 
 try
 {
-    // 📞 CAMBIAR ESTOS VALORES SI QUIERES:
-    string phoneNumber = "50212345678";  // Tu número de prueba
-    string message = $"✅ ¡Modern .NET SMS SDK funcionando perfectamente! {DateTime.Now:HH:mm:ss} 🚀";
+    // CHANGE THESE VALUES IF YOU WANT:
+    string phoneNumber = "50212345678";  // Your test number
+    string message = $"Modern .NET SMS SDK working perfectly! {DateTime.Now:HH:mm:ss}";
 
-    Console.WriteLine($"📤 Enviando mensaje a: {phoneNumber}");
-    Console.WriteLine($"💬 Mensaje: {message}");
-    Console.WriteLine("⏳ Enviando...\n");
+    Console.WriteLine($"Sending message to: {phoneNumber}");
+    Console.WriteLine($"Message: {message}");
+    Console.WriteLine("Sending...\n");
 
-    // 🚀 MÉTODO ASYNC (Recomendado)
+    // ASYNC METHOD (Recommended)
     var result = await smsApi.Messages.SendToContactAsync(phoneNumber, message);
 
     if (result.IsOk)
     {
-        Console.WriteLine("✅ ¡MENSAJE ENVIADO EXITOSAMENTE!");
-        Console.WriteLine($"📧 ID del Mensaje: {result.Data?.MessageId}");
-        Console.WriteLine($"📱 Número de destino: {result.Data?.Msisdn}");
-        Console.WriteLine($"💬 Mensaje enviado: {result.Data?.Message}");
-        Console.WriteLine($"📊 Estado HTTP: {result.HttpCode}");
-        Console.WriteLine($"🕐 Enviado a las: {DateTime.Now:yyyy-MM-dd HH:mm:ss}");
+        Console.WriteLine("MESSAGE SENT SUCCESSFULLY!");
+        Console.WriteLine($"Message ID: {result.Data?.MessageId}");
+        Console.WriteLine($"Destination: {result.Data?.Msisdn}");
+        Console.WriteLine($"Message sent: {result.Data?.Message}");
+        Console.WriteLine($"HTTP Status: {result.HttpCode}");
+        Console.WriteLine($"Sent at: {DateTime.Now:yyyy-MM-dd HH:mm:ss}");
     }
     else
     {
-        Console.WriteLine("❌ ERROR AL ENVIAR MENSAJE:");
-        Console.WriteLine($"🔴 Código de error: {result.ErrorCode}");
-        Console.WriteLine($"📝 Descripción: {result.ErrorDescription}");
-        Console.WriteLine($"🌐 Estado HTTP: {result.HttpCode}");
+        Console.WriteLine("ERROR SENDING MESSAGE:");
+        Console.WriteLine($"Error code: {result.ErrorCode}");
+        Console.WriteLine($"Description: {result.ErrorDescription}");
+        Console.WriteLine($"HTTP Status: {result.HttpCode}");
     }
 
-    // También probemos el método sync para compatibilidad
-    Console.WriteLine("\n🔄 Probando método sincrónico...");
-    var syncResult = smsApi.Messages.SendToContact(phoneNumber, $"✅ Método SYNC también funciona! {DateTime.Now:HH:mm:ss}");
+    // Also test sync method for compatibility
+    Console.WriteLine("\nTesting synchronous method...");
+    var syncResult = smsApi.Messages.SendToContact(phoneNumber, $"Sync method also works! {DateTime.Now:HH:mm:ss}");
     
     if (syncResult.IsOk)
     {
-        Console.WriteLine("✅ ¡Método sincrónico también funcionó!");
-        Console.WriteLine($"📧 ID del Mensaje Sync: {syncResult.Data?.MessageId}");
+        Console.WriteLine("Synchronous method also worked!");
+        Console.WriteLine($"Sync Message ID: {syncResult.Data?.MessageId}");
     }
     else
     {
-        Console.WriteLine($"❌ Método sync falló: {syncResult.ErrorDescription}");
+        Console.WriteLine($"Sync method failed: {syncResult.ErrorDescription}");
     }
 }
 catch (Exception ex)
 {
-    Console.WriteLine($"💥 EXCEPCIÓN: {ex.Message}");
-    Console.WriteLine($"🔍 Detalles: {ex.StackTrace}");
+    Console.WriteLine($"EXCEPTION: {ex.Message}");
+    Console.WriteLine($"Details: {ex.StackTrace}");
 }
 
-Console.WriteLine("\nPresiona cualquier tecla para salir...");
+Console.WriteLine("\nPress any key to exit...");
 Console.ReadKey(); 
