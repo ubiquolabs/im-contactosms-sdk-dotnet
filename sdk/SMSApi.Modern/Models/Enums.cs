@@ -83,4 +83,13 @@ public enum AddedFrom
     IMPORT,
     MANUAL,
     FILE_UPLOAD    // ✅ Real API value
+}
+
+/// <summary>
+/// Shortlink status enumeration
+/// </summary>
+public enum ShortlinkStatus
+{
+    ACTIVE,
+    INACTIVE
 } 

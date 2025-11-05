@@ -1,5 +1,6 @@
 using InteractuaMovil.ContactoSms.Api.Extensions;
 using InteractuaMovil.ContactoSms.Api.Interfaces;
+using InteractuaMovil.ContactoSms.Api.Models;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
@@ -212,6 +213,75 @@ try
     else
     {
         Console.WriteLine($"❌ Error: {utf8Result.ErrorDescription}");
+    }
+
+    // === 6. TEST SHORTLINKS ===
+    Console.WriteLine("\n🔗 6. PROBANDO GESTIÓN DE SHORTLINKS");
+    Console.WriteLine("──────────────────────────────────");
+    
+    // Create shortlink
+    Console.Write("   ➕ Creando shortlink... ");
+    var createShortlinkResult = await smsApi.Shortlinks.CreateAsync(
+        longUrl: "https://www.example.com/very-long-url-with-parameters",
+        name: "Test Shortlink",
+        status: ShortlinkStatus.ACTIVE
+    );
+    if (createShortlinkResult.IsOk && createShortlinkResult.Data != null)
+    {
+        Console.WriteLine("✅ Creado!");
+        Console.WriteLine($"      ID: {createShortlinkResult.Data.Id}");
+        Console.WriteLine($"      Short URL: {createShortlinkResult.Data.ShortUrl}");
+        Console.WriteLine($"      Long URL: {createShortlinkResult.Data.LongUrl}");
+        
+        var shortlinkId = createShortlinkResult.Data.Id;
+        
+        // Get by ID
+        Console.Write($"   🔍 Consultando shortlink por ID... ");
+        var getShortlinkResult = await smsApi.Shortlinks.GetByIdAsync(shortlinkId);
+        if (getShortlinkResult.IsOk)
+        {
+            Console.WriteLine("✅ Encontrado!");
+            Console.WriteLine($"      Status: {getShortlinkResult.Data?.Status}");
+        }
+        else
+        {
+            Console.WriteLine($"❌ Error: {getShortlinkResult.ErrorDescription}");
+        }
+        
+        // Update status
+        Console.Write($"   🔄 Actualizando estado a INACTIVE... ");
+        var updateStatusResult = await smsApi.Shortlinks.UpdateStatusAsync(shortlinkId, ShortlinkStatus.INACTIVE);
+        if (updateStatusResult.IsOk)
+        {
+            Console.WriteLine("✅ Actualizado!");
+        }
+        else
+        {
+            Console.WriteLine($"❌ Error: {updateStatusResult.ErrorDescription}");
+        }
+    }
+    else
+    {
+        Console.WriteLine($"❌ Error: {createShortlinkResult.ErrorDescription}");
+    }
+    
+    // List shortlinks
+    Console.Write("   📋 Listando shortlinks... ");
+    var listShortlinksResult = await smsApi.Shortlinks.GetListAsync(limit: 10);
+    if (listShortlinksResult.IsOk)
+    {
+        Console.WriteLine($"✅ {listShortlinksResult.Data?.Count ?? 0} shortlinks encontrados");
+        if (listShortlinksResult.Data?.Count > 0)
+        {
+            foreach (var sl in listShortlinksResult.Data.Take(3))
+            {
+                Console.WriteLine($"      - {sl.Id}: {sl.ShortUrl}");
+            }
+        }
+    }
+    else
+    {
+        Console.WriteLine($"❌ Error: {listShortlinksResult.ErrorDescription}");
     }
 
     Console.WriteLine("\n🎉 PRUEBAS COMPLETADAS!");
