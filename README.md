@@ -229,6 +229,7 @@ var messages = await _smsApi.Messages.GetListAsync(
 var shortlink = await _smsApi.Shortlinks.CreateAsync(
     longUrl: "https://www.example.com/very-long-url-with-parameters",
     name: "Example Shortlink",
+    alias: "promoBlackFriday",
     status: ShortlinkStatus.ACTIVE
 );
 
@@ -240,15 +241,15 @@ var shortlinksWithLimit = await _smsApi.Shortlinks.GetListAsync(limit: 10);
 
 // List shortlinks by date range
 var shortlinksByDate = await _smsApi.Shortlinks.GetListAsync(
-    startDate: "2025-01-01",
-    endDate: "2025-01-31",
+    startDate: "2024-01-01",
+    endDate: "2024-12-31",
     limit: 20
 );
 
 // List shortlinks by date with limit and offset
 var shortlinksByDateWithOffset = await _smsApi.Shortlinks.GetListAsync(
-    startDate: "2025-01-01",
-    endDate: "2025-12-31",
+    startDate: "2024-01-01",
+    endDate: "2024-12-31",
     limit: 20,
     offset: -6
 );
@@ -261,6 +262,7 @@ var shortlinkById = await _smsApi.Shortlinks.GetByIdAsync("123ABC");
 
 // Update shortlink status
 await _smsApi.Shortlinks.UpdateStatusAsync("123ABC", ShortlinkStatus.INACTIVE);
+// shortlink ID is required. Note: reactivating a shortlink is not supported; ACTIVE updates return an error.
 ```
 
 ## Available Examples
@@ -312,6 +314,7 @@ Example error response:
   "account_id": 12345,
   "url_id": "123ABC",
   "short_url": "https://shorturl-pais.com/123ABC",
+  "alias": "promoBlackFriday",
   "long_url": "https://www.example.com/very-long-url-with-parameters"
 }
 ```
@@ -329,6 +332,7 @@ Example error response:
       "status": "INACTIVE",
       "base_url": "https://shorturl-pais.com/",
       "short_url": "https://shorturl-pais.com/123ABC",
+      "alias": "promoBlackFriday",
       "long_url": "https://www.example.com/long-url-here",
       "visits": 0,
       "unique_visits": 0,
@@ -352,6 +356,7 @@ Example error response:
   "account_id": 12345,
   "url_id": "123ABC",
   "short_url": "https://shorturl-pais.com/123ABC",
+  "alias": "promoBlackFriday",
   "long_url": "https://www.example.com/long-url-with-parameters",
   "name": "Example Shortlink",
   "status": "ACTIVE",

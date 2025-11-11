@@ -369,6 +369,9 @@ public class ShortlinkResponse
     [JsonPropertyName("long_url")]
     public string? LongUrl { get; set; }
 
+    [JsonPropertyName("alias")]
+    public string? Alias { get; set; }
+
     [JsonPropertyName("visits")]
     public int? Visits { get; set; }
 
@@ -408,6 +411,9 @@ public class CreateShortlinkRequest
     [JsonPropertyName("status")]
     [JsonConverter(typeof(JsonStringEnumConverter))]
     public ShortlinkStatus Status { get; set; } = ShortlinkStatus.ACTIVE;
+
+    [JsonPropertyName("alias")]
+    public string? Alias { get; set; }
 }
 
 /// <summary>

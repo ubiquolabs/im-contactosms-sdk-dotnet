@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using System.Net;
 using System.Net.Http;
 using System.Net.Http.Headers;
@@ -166,24 +167,7 @@ public class ApiClient
 
         if (response.IsSuccessStatusCode)
         {
-            try
-            {
-                if (!string.IsNullOrWhiteSpace(content))
-                {
-                    apiResponse.Data = JsonSerializer.Deserialize<T>(content, _jsonOptions);
-                }
-                
-                if (_options.EnableLogging)
-                {
-                    _logger.LogDebug("Successful response: {StatusCode}", response.StatusCode);
-                }
-            }
-            catch (JsonException ex)
-            {
-                _logger.LogError(ex, "Failed to deserialize response: {Content}", content);
-                apiResponse.ErrorCode = (int)HttpStatusCode.InternalServerError;
-                apiResponse.ErrorDescription = "Failed to parse response JSON";
-            }
+            HandleSuccessResponse(content, ref apiResponse);
         }
         else
         {
@@ -225,6 +209,63 @@ public class ApiClient
         }
 
         return apiResponse;
+    }
+
+    private void HandleSuccessResponse<T>(string content, ref ApiResponse<T> apiResponse)
+    {
+        if (string.IsNullOrWhiteSpace(content))
+        {
+            return;
+        }
+
+        try
+        {
+            using var document = JsonDocument.Parse(content);
+            var root = document.RootElement;
+
+            if (root.ValueKind == JsonValueKind.Object && root.TryGetProperty("data", out var dataElement))
+            {
+                if (dataElement.ValueKind != JsonValueKind.Null && dataElement.ValueKind != JsonValueKind.Undefined)
+                {
+                    apiResponse.Data = JsonSerializer.Deserialize<T>(dataElement.GetRawText(), _jsonOptions);
+
+                    if (apiResponse.Data is List<ShortlinkResponse> shortlinkList)
+                    {
+                        foreach (var shortlink in shortlinkList)
+                        {
+                            if (string.IsNullOrWhiteSpace(shortlink.UrlId))
+                            {
+                                shortlink.UrlId = shortlink.Id;
+                            }
+                        }
+                    }
+                    else if (apiResponse.Data is ShortlinkResponse singleShortlink && string.IsNullOrWhiteSpace(singleShortlink.UrlId))
+                    {
+                        singleShortlink.UrlId = singleShortlink.Id;
+                    }
+                }
+
+                if (root.TryGetProperty("success", out var successElement) && successElement.ValueKind == JsonValueKind.False && apiResponse.ErrorCode == 0)
+                {
+                    apiResponse.ErrorCode = (int)HttpStatusCode.InternalServerError;
+                }
+            }
+            else
+            {
+                apiResponse.Data = JsonSerializer.Deserialize<T>(content, _jsonOptions);
+            }
+
+            if (_options.EnableLogging)
+            {
+                _logger.LogDebug("Successful response: {StatusCode}", apiResponse.HttpCode);
+            }
+        }
+        catch (JsonException ex)
+        {
+            _logger.LogError(ex, "Failed to deserialize response: {Content}", content);
+            apiResponse.ErrorCode = (int)HttpStatusCode.InternalServerError;
+            apiResponse.ErrorDescription = "Failed to parse response JSON";
+        }
     }
 
     private string GenerateHmacSignature(string data)

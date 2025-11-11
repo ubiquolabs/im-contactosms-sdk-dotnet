@@ -1,4 +1,6 @@
 using System.Net.Http;
+using System.Linq;
+using System;
 using InteractuaMovil.ContactoSms.Api.Interfaces;
 using InteractuaMovil.ContactoSms.Api.Models;
 using Microsoft.Extensions.Logging;
@@ -32,9 +34,9 @@ public class ShortlinksService : IShortlinks
         return GetByIdAsync(id).GetAwaiter().GetResult();
     }
 
-    public ApiResponse<ShortlinkResponse> Create(string longUrl, string? name = null, ShortlinkStatus status = ShortlinkStatus.ACTIVE)
+    public ApiResponse<ShortlinkResponse> Create(string longUrl, string? name = null, ShortlinkStatus status = ShortlinkStatus.ACTIVE, string? alias = null)
     {
-        return CreateAsync(longUrl, name, status).GetAwaiter().GetResult();
+        return CreateAsync(longUrl, name, status, alias).GetAwaiter().GetResult();
     }
 
     public ApiResponse<ShortlinkResponse> UpdateStatus(string id, ShortlinkStatus status)
@@ -118,22 +120,28 @@ public class ShortlinksService : IShortlinks
         return response;
     }
 
-    public async Task<ApiResponse<ShortlinkResponse>> CreateAsync(string longUrl, string? name = null, 
-        ShortlinkStatus status = ShortlinkStatus.ACTIVE, CancellationToken cancellationToken = default)
+    public async Task<ApiResponse<ShortlinkResponse>> CreateAsync(string longUrl, string? name = null,
+        ShortlinkStatus status = ShortlinkStatus.ACTIVE,
+        string? alias = null,
+        CancellationToken cancellationToken = default)
     {
         if (string.IsNullOrWhiteSpace(longUrl))
             throw new ArgumentException("Long URL cannot be null or empty", nameof(longUrl));
 
-        _logger.LogDebug("Creating shortlink: {LongUrl}, {Name}, {Status}", longUrl, name, status);
+        _logger.LogDebug("Creating shortlink: {LongUrl}, {Name}, {Alias}, {Status}", longUrl, name, alias, status);
+
+        var normalizedName = NormalizeName(name);
+        var normalizedAlias = NormalizeAlias(alias);
 
         var request = new CreateShortlinkRequest
         {
             LongUrl = longUrl,
-            Name = name,
-            Status = status
+            Name = normalizedName,
+            Status = status,
+            Alias = normalizedAlias
         };
 
-        return await _apiClient.RequestAsync<ShortlinkResponse>("short_link", HttpMethod.Post, 
+        return await _apiClient.RequestAsync<ShortlinkResponse>("short_link", HttpMethod.Post,
             null, request, false, cancellationToken);
     }
 
@@ -141,6 +149,11 @@ public class ShortlinksService : IShortlinks
     {
         if (string.IsNullOrWhiteSpace(id))
             throw new ArgumentException("Shortlink ID cannot be null or empty", nameof(id));
+
+        if (status == ShortlinkStatus.ACTIVE)
+        {
+            throw new ArgumentException("Shortlinks cannot be reactivated; only INACTIVE updates are supported.", nameof(status));
+        }
 
         _logger.LogDebug("Updating shortlink status: {Id}, {Status}", id, status);
 
@@ -159,5 +172,48 @@ public class ShortlinksService : IShortlinks
     }
 
     #endregion
+
+    private static string? NormalizeAlias(string? alias)
+    {
+        if (alias == null)
+        {
+            return null;
+        }
+
+        var trimmed = alias.Trim();
+        if (trimmed.Length == 0)
+        {
+            throw new ArgumentException("Alias cannot be empty", nameof(alias));
+        }
+
+        if (trimmed.Length > 30)
+        {
+            throw new ArgumentException("Alias must be 30 characters or fewer", nameof(alias));
+        }
+
+        if (trimmed.Any(char.IsWhiteSpace))
+        {
+            throw new ArgumentException("Alias cannot contain whitespace", nameof(alias));
+        }
+
+        return trimmed;
+    }
+
+    private static string? NormalizeName(string? name)
+    {
+        if (string.IsNullOrWhiteSpace(name))
+        {
+            return null;
+        }
+
+        var trimmed = name.Trim();
+
+        if (trimmed.Length > 50)
+        {
+            throw new ArgumentException("Name must be 50 characters or fewer", nameof(name));
+        }
+
+        return trimmed;
+    }
 }
 
