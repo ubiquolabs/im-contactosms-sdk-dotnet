@@ -23,9 +23,12 @@ dotnet run -- list
 
 ### Create a shortlink
 ```bash
-dotnet run -- create
-dotnet run -- create "https://www.example.com" "My Shortlink" ACTIVE
+ dotnet run -- create
+ dotnet run -- create "https://www.example.com" "My Shortlink" "PromoAlias" ACTIVE
 ```
+
+> **Alias rules:** 1–30 printable characters, no spaces. Duplicate aliases on the same domain return `500 Bad Request`.
+> Names are trimmed and limited to 50 characters.
 
 ### List shortlinks by date range
 ```bash
@@ -39,6 +42,7 @@ dotnet run -- id 123ABC
 
 ### Update shortlink status
 ```bash
+# Reactivation is not supported: ACTIVE requests will fail
 dotnet run -- update 123ABC ACTIVE
 dotnet run -- update 123ABC INACTIVE
 ```
@@ -60,11 +64,11 @@ dotnet run -- --help
 
 ## Commands Summary
 
-- `create [url] [name] [status]` - Create shortlink
+- `create [url] [name] [alias] [status]` - Create shortlink (alias optional, status defaults to ACTIVE)
 - `list` - List all shortlinks
 - `date [start] [end] [limit] [offset]` - List by date range
 - `id <id>` - Get shortlink by ID
-- `update <id> <status>` - Update shortlink status
+- `update <id> <status>` - Update shortlink status (only INACTIVE is accepted by the API)
 - `status` - Test status validation
 - `multiple [count]` - Test multiple shortlinks
 - `--help` - Show usage information
