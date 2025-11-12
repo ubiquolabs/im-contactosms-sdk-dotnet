@@ -50,7 +50,8 @@ switch (command?.ToLower())
         var longUrl = argsList.Count > 1 ? argsList[1] : GetRandomLongUrl();
         var name = argsList.Count > 2 ? argsList[2] : GetRandomName();
         var status = argsList.Count > 3 ? Enum.Parse<ShortlinkStatus>(argsList[3].ToUpper()) : ShortlinkStatus.ACTIVE;
-        await TestCreateShortlink(smsApi, longUrl, name, status);
+        var alias = argsList.Count > 4 ? argsList[4] : null;
+        await TestCreateShortlink(smsApi, longUrl, name, status, alias);
         break;
 
     case "list":
@@ -110,7 +111,7 @@ switch (command?.ToLower())
 static void PrintUsage()
 {
     Console.WriteLine("Usage:");
-    Console.WriteLine("  dotnet run -- create [url] [name] [status]     - Create shortlink");
+    Console.WriteLine("  dotnet run -- create [url] [name] [status] [alias] - Create shortlink");
     Console.WriteLine("  dotnet run -- list                             - List all shortlinks");
     Console.WriteLine("  dotnet run -- date [start] [end] [limit] [offset] - List by date range");
     Console.WriteLine("  dotnet run -- id <id>                          - Get shortlink by ID");
@@ -182,7 +183,7 @@ static ShortlinkStatus GetRandomStatus()
     return Random.Shared.Next(2) == 0 ? ShortlinkStatus.ACTIVE : ShortlinkStatus.INACTIVE;
 }
 
-static async Task TestCreateShortlink(ISmsApi smsApi, string? longUrl = null, string? name = null, ShortlinkStatus? status = null)
+static async Task TestCreateShortlink(ISmsApi smsApi, string? longUrl = null, string? name = null, ShortlinkStatus? status = null, string? alias = null)
 {
     Console.WriteLine("TEST CREATE SHORTLINK");
     Console.WriteLine("=====================\n");
@@ -193,10 +194,14 @@ static async Task TestCreateShortlink(ISmsApi smsApi, string? longUrl = null, st
 
     Console.WriteLine($"URL: {longUrl}");
     Console.WriteLine($"Name: {name}");
+    if (!string.IsNullOrEmpty(alias))
+    {
+        Console.WriteLine($"Alias: {alias}");
+    }
     Console.WriteLine($"Status: {status}");
     Console.WriteLine();
 
-    var result = await smsApi.Shortlinks.CreateAsync(longUrl, name, status.Value);
+    var result = await smsApi.Shortlinks.CreateAsync(longUrl, name, status.Value, alias);
 
     if (result.IsOk && result.Data != null)
     {
