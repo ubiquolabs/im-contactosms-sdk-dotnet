@@ -35,15 +35,21 @@ public class SmsApi : ISmsApi
     public ITags Tags { get; }
 
     /// <summary>
+    /// Shortlink management operations
+    /// </summary>
+    public IShortlinks Shortlinks { get; }
+
+    /// <summary>
     /// Constructor for dependency injection
     /// </summary>
-    public SmsApi(IContacts contacts, IGroups groups, IMessages messages, IAccounts accounts, ITags tags)
+    public SmsApi(IContacts contacts, IGroups groups, IMessages messages, IAccounts accounts, ITags tags, IShortlinks shortlinks)
     {
         Contacts = contacts ?? throw new ArgumentNullException(nameof(contacts));
         Groups = groups ?? throw new ArgumentNullException(nameof(groups));
         Messages = messages ?? throw new ArgumentNullException(nameof(messages));
         Account = accounts ?? throw new ArgumentNullException(nameof(accounts));
         Tags = tags ?? throw new ArgumentNullException(nameof(tags));
+        Shortlinks = shortlinks ?? throw new ArgumentNullException(nameof(shortlinks));
     }
 
     /// <summary>

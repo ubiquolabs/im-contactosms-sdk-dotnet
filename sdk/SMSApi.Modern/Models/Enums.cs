@@ -43,7 +43,7 @@ public enum MessageSentFrom
     SMS,
     SYSTEM,
     SCHEDULER,
-    ADDON // ✅ Missing value found in API response
+    ADDON // Missing value found in API response
 }
 
 /// <summary>
@@ -67,7 +67,7 @@ public enum ContactStatus
     CONFIRMED,
     CANCELLED,
     BLOCKED,
-    SUSCRIBED,     // ✅ API real value (sin 'B')
+    SUSCRIBED,     // API real value (sin 'B')
     SUBSCRIBED,    // Alternative spelling
     INVITED
 }
@@ -82,5 +82,14 @@ public enum AddedFrom
     SMS,
     IMPORT,
     MANUAL,
-    FILE_UPLOAD    // ✅ Real API value
+    FILE_UPLOAD    // Real API value
+}
+
+/// <summary>
+/// Shortlink status enumeration
+/// </summary>
+public enum ShortlinkStatus
+{
+    ACTIVE,
+    INACTIVE
 } 

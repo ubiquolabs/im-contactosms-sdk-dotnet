@@ -114,7 +114,7 @@ public class MessagesService : IMessages
     {
         var parameters = new Dictionary<string, string>();
 
-        // ✅ Use exact date format like JavaScript: "2025-07-01 00:00:00" (consistent with GetListAsync)
+        // Use exact date format like JavaScript: "2025-07-01 00:00:00" (consistent with GetListAsync)
         if (startDate.HasValue)
             parameters.Add("start_date", startDate.Value.ToString("yyyy-MM-dd HH:mm:ss")); // "2025-07-01 00:00:00"
         if (endDate.HasValue)
@@ -150,7 +150,7 @@ public class MessagesService : IMessages
     {
         var parameters = new Dictionary<string, string>();
 
-        // ✅ Use exact date format like JavaScript: "2025-07-01 00:00:00"
+        // Use exact date format like JavaScript: "2025-07-01 00:00:00"
         if (startDate.HasValue)
             parameters.Add("start_date", startDate.Value.ToString("yyyy-MM-dd HH:mm:ss")); // "2025-07-01 00:00:00"
         if (endDate.HasValue)
@@ -166,10 +166,10 @@ public class MessagesService : IMessages
         if (!string.IsNullOrEmpty(username))
             parameters.Add("user", username);
         
-        // ✅ Add direction parameter (required by API)
+        // Add direction parameter (required by API)
         parameters.Add("direction", direction.ToString().ToUpper());
 
-        // ✅ Re-enable delivery status as requested
+        // Re-enable delivery status as requested
         parameters.Add("delivery_status_enable", "true");
 
         _logger.LogDebug("Getting message list with {ParameterCount} parameters (Java-compatible)", parameters.Count);

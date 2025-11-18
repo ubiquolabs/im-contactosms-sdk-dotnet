@@ -29,4 +29,9 @@ public interface ISmsApi
     /// Tag management operations
     /// </summary>
     ITags Tags { get; }
+
+    /// <summary>
+    /// Shortlink management operations
+    /// </summary>
+    IShortlinks Shortlinks { get; }
 } 

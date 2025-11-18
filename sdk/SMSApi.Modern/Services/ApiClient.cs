@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using System.Net;
 using System.Net.Http;
 using System.Net.Http.Headers;
@@ -131,7 +132,7 @@ public class ApiClient
     {
         var date = DateTime.UtcNow.ToString("r");
         
-        // ✅ Use SAME canonical string structure as Java (always works)
+        // Use SAME canonical string structure as Java (always works)
         // Java: apiKey + httpDate + filters + jsonText
         var canonical = $"{_options.ApiKey}{date}{queryString}{bodyData}";
 
@@ -143,7 +144,7 @@ public class ApiClient
         request.Headers.Authorization = AuthenticationHeaderValue.Parse(authHeader);
         request.Headers.Date = DateTime.Parse(date, System.Globalization.CultureInfo.InvariantCulture);
         
-        // ✅ Add missing X-IM-ORIGIN header that JavaScript sends
+        // Add missing X-IM-ORIGIN header that JavaScript sends
         request.Headers.Add("X-IM-ORIGIN", "IM_SDK_DOTNET_MODERN");
         
         if (_options.EnableLogging)
@@ -166,24 +167,7 @@ public class ApiClient
 
         if (response.IsSuccessStatusCode)
         {
-            try
-            {
-                if (!string.IsNullOrWhiteSpace(content))
-                {
-                    apiResponse.Data = JsonSerializer.Deserialize<T>(content, _jsonOptions);
-                }
-                
-                if (_options.EnableLogging)
-                {
-                    _logger.LogDebug("Successful response: {StatusCode}", response.StatusCode);
-                }
-            }
-            catch (JsonException ex)
-            {
-                _logger.LogError(ex, "Failed to deserialize response: {Content}", content);
-                apiResponse.ErrorCode = (int)HttpStatusCode.InternalServerError;
-                apiResponse.ErrorDescription = "Failed to parse response JSON";
-            }
+            HandleSuccessResponse(content, ref apiResponse);
         }
         else
         {
@@ -212,7 +196,7 @@ public class ApiClient
 
             _logger.LogWarning("API error: {StatusCode} - {Error}", response.StatusCode, apiResponse.ErrorDescription);
             
-            // 🔍 DEBUG: Log full response details for 500 errors
+            // DEBUG: Log full response details for 500 errors
             if (response.StatusCode == HttpStatusCode.InternalServerError)
             {
                 Console.WriteLine("=== 500 ERROR DETAILS ===");
@@ -227,6 +211,63 @@ public class ApiClient
         return apiResponse;
     }
 
+    private void HandleSuccessResponse<T>(string content, ref ApiResponse<T> apiResponse)
+    {
+        if (string.IsNullOrWhiteSpace(content))
+        {
+            return;
+        }
+
+        try
+        {
+            using var document = JsonDocument.Parse(content);
+            var root = document.RootElement;
+
+            if (root.ValueKind == JsonValueKind.Object && root.TryGetProperty("data", out var dataElement))
+            {
+                if (dataElement.ValueKind != JsonValueKind.Null && dataElement.ValueKind != JsonValueKind.Undefined)
+                {
+                    apiResponse.Data = JsonSerializer.Deserialize<T>(dataElement.GetRawText(), _jsonOptions);
+
+                    if (apiResponse.Data is List<ShortlinkResponse> shortlinkList)
+                    {
+                        foreach (var shortlink in shortlinkList)
+                        {
+                            if (string.IsNullOrWhiteSpace(shortlink.UrlId))
+                            {
+                                shortlink.UrlId = shortlink.Id;
+                            }
+                        }
+                    }
+                    else if (apiResponse.Data is ShortlinkResponse singleShortlink && string.IsNullOrWhiteSpace(singleShortlink.UrlId))
+                    {
+                        singleShortlink.UrlId = singleShortlink.Id;
+                    }
+                }
+
+                if (root.TryGetProperty("success", out var successElement) && successElement.ValueKind == JsonValueKind.False && apiResponse.ErrorCode == 0)
+                {
+                    apiResponse.ErrorCode = (int)HttpStatusCode.InternalServerError;
+                }
+            }
+            else
+            {
+                apiResponse.Data = JsonSerializer.Deserialize<T>(content, _jsonOptions);
+            }
+
+            if (_options.EnableLogging)
+            {
+                _logger.LogDebug("Successful response: {StatusCode}", apiResponse.HttpCode);
+            }
+        }
+        catch (JsonException ex)
+        {
+            _logger.LogError(ex, "Failed to deserialize response: {Content}", content);
+            apiResponse.ErrorCode = (int)HttpStatusCode.InternalServerError;
+            apiResponse.ErrorDescription = "Failed to parse response JSON";
+        }
+    }
+
     private string GenerateHmacSignature(string data)
     {
         using var hmac = new HMACSHA1(Encoding.UTF8.GetBytes(_options.SecretKey));
@@ -238,7 +279,7 @@ public class ApiClient
     {
         if (parameters == null || parameters.Count == 0) return string.Empty;
 
-        // ✅ Sort parameters alphabetically like Java SDK
+        // Sort parameters alphabetically like Java SDK
         var pairs = parameters
             .OrderBy(kvp => kvp.Key)
             .Select(kvp => $"{UrlEncodeCustomStyle(kvp.Key)}={UrlEncodeCustomStyle(kvp.Value)}");

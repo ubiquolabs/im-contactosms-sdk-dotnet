@@ -1,6 +1,6 @@
 using InteractuaMovil.ContactoSms.Api.Services;
 using InteractuaMovil.ContactoSms.Api.Configuration;
-using InteractuaMovil.ContactoSms.Api.Models; // ✅ Re-added for MessageDirection
+using InteractuaMovil.ContactoSms.Api.Models; // Re-added for MessageDirection
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using Moq;
@@ -27,7 +27,7 @@ public class MessagesServiceTests
         _apiClientLoggerMock = new Mock<ILogger<ApiClient>>();
         
         var httpClient = new HttpClient(_httpHandlerMock.Object);
-        // ✅ Use fully qualified name to resolve ambiguity
+        // Use fully qualified name to resolve ambiguity
         var options = new InteractuaMovil.ContactoSms.Api.Configuration.SmsApiOptions
         {
             ApiKey = "test-key",
@@ -35,7 +35,7 @@ public class MessagesServiceTests
             ApiUrl = "https://test.com/",
             TimeoutSeconds = 30
         };
-        // ✅ Use fully qualified name here too
+        // Use fully qualified name here too
         var optionsMock = new Mock<IOptions<InteractuaMovil.ContactoSms.Api.Configuration.SmsApiOptions>>();
         optionsMock.Setup(x => x.Value).Returns(options);
         

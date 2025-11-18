@@ -1,12 +1,12 @@
-# 🚀 Quick Test - SMS API .NET SDK
+# Quick Test - SMS API .NET SDK
 
-Prueba rápida y completa de todas las funcionalidades principales del SMS API SDK.
+Quick and complete test of all main SMS API SDK functionalities.
 
-## ⚡ Uso Rápido
+## Quick Start
 
-### 1. Configurar credenciales
+### 1. Configure credentials
 
-**Opción A: appsettings.json**
+**Option A: appsettings.json**
 ```bash
 # Edita appsettings.json y reemplaza:
 # "your-api-key-here" con tu API key real
@@ -14,7 +14,7 @@ Prueba rápida y completa de todas las funcionalidades principales del SMS API S
 # "https://your-api-url.com/api/" con tu URL real
 ```
 
-**Opción B: User Secrets (Recomendado para desarrollo)**
+**Option B: User Secrets (Recommended for development)**
 ```bash
 cd .netLATEST/examples/QuickTest
 dotnet user-secrets set "SmsApi:ApiKey" "tu-api-key-real"
@@ -22,99 +22,99 @@ dotnet user-secrets set "SmsApi:SecretKey" "tu-secret-key-real"
 dotnet user-secrets set "SmsApi:ApiUrl" "https://tu-api-url.com/api/"
 ```
 
-### 2. Personalizar datos de prueba
+### 2. Customize test data
 
-Edita en `appsettings.json`:
+Edit `appsettings.json`:
 ```json
 "TestData": {
-  "TestPhoneNumber": "50212345678",     // 📱 Tu número de prueba
-  "TestMessage": "¡Hola desde SDK! 🚀",  // 💬 Mensaje de prueba
-  "TestTagName": "TestTag",              // 🏷️ Tag existente
-  "TestContactFirstName": "Juan",        // 👤 Nombre
-  "TestContactLastName": "Pérez"         // 👤 Apellido
+  "TestPhoneNumber": "50212345678",
+  "TestMessage": "Hello from SDK!",
+  "TestTagName": "TestTag",
+  "TestContactFirstName": "John",
+  "TestContactLastName": "Doe"
 }
 ```
 
-### 3. Ejecutar
+### 3. Run
 
 ```bash
 cd .netLATEST/examples/QuickTest
 dotnet run
 ```
 
-## 🧪 Qué prueba
+## What It Tests
 
-✅ **Envío de Mensajes**
-- A contacto individual
-- Por tags
+**Message Sending**
+- To individual contact
+- By tags
 
-✅ **Gestión de Contactos**  
-- Agregar contacto
-- Consultar contacto
-- Agregar tag a contacto
+**Contact Management**  
+- Add contact
+- Get contact
+- Add tag to contact
 
-✅ **Gestión de Tags**
-- Listar tags
-- Consultar contactos por tag
+**Tag Management**
+- List tags
+- Get contacts by tag
 
-✅ **Consulta de Mensajes**
-- Retrieve mensajes del día
+**Message Query**
+- Retrieve messages from today
 
-## 📋 Salida Esperada
+## Expected Output
 
 ```
-🚀 SMS API .NET SDK - Quick Test
+SMS API .NET SDK - Quick Test
 =================================
 
-📱 Datos de prueba:
-   Teléfono: +50212345678
-   Mensaje: ¡Hola desde SMS API .NET SDK! 🚀
+Test Data:
+   Phone: +50212345678
+   Message: Hello from SMS API .NET SDK!
    Tag: TestTag
 
-💬 1. PROBANDO ENVÍO DE MENSAJES
+1. TESTING MESSAGE SENDING
 ─────────────────────────────────
-   📞 Enviando a contacto... ✅ Enviado!
+   Sending to contact... Sent!
       ID: msg_12345
-   🏷️  Enviando por tags... ✅ Enviado!
+   Sending to tags... Sent!
       ID: msg_12346
 
-👥 2. PROBANDO GESTIÓN DE CONTACTOS
+2. TESTING CONTACT MANAGEMENT
 ──────────────────────────────────
-   ➕ Agregando contacto... ✅ Agregado!
-      Nombre: Juan Pérez
-   🔍 Consultando contacto... ✅ Encontrado!
-      Estado: Active
-   🏷️  Agregando tag al contacto... ✅ Tag agregado!
+   Adding contact... Added!
+      Name: John Doe
+   Getting contact... Found!
+      Status: Active
+   Adding tag to contact... Tag added!
 
-🏷️  3. PROBANDO GESTIÓN DE TAGS
+3. TESTING TAG MANAGEMENT
 ───────────────────────────────
-   📋 Listando tags... ✅ Encontrados 5 tags
+   Listing tags... Found 5 tags
       - TestTag
       - Clientes
       - VIP
-   👥 Contactos en tag 'TestTag'... ✅ 1 contactos encontrados
+   Contacts in tag 'TestTag'... 1 contacts found
 
-📊 4. PROBANDO CONSULTA DE MENSAJES
+4. TESTING MESSAGE QUERY
 ──────────────────────────────────
-   📜 Consultando mensajes de hoy... ✅ 3 mensajes encontrados
-      - ¡Hola desde SMS API .NET SDK...
-      - Mensaje de prueba...
+   Querying messages... 3 messages found
+      - Hello from SMS API .NET SDK...
+      - Test message...
 
-🎉 PRUEBAS COMPLETADAS!
+TESTS COMPLETED!
 ========================
-✅ Si ves mensajes enviados, ¡el SDK funciona correctamente!
+If you see messages sent, the SDK is working correctly!
 ```
 
-## 🔧 Troubleshooting
+## Troubleshooting
 
-**❌ "Configuración inválida"**
-- Verifica que las credenciales sean correctas
-- Usa `dotnet user-secrets` para credenciales seguras
+**"Invalid configuration"**
+- Verify credentials are correct
+- Use `dotnet user-secrets` for secure credentials
 
-**❌ "Error al enviar mensaje"**  
-- Verifica que el número de teléfono sea válido
-- Asegúrate de tener créditos/balance en la cuenta
+**"Error sending message"**  
+- Verify phone number is valid
+- Ensure you have credits/balance in your account
 
-**❌ "Tag no encontrado"**
-- Cambia `TestTagName` por un tag que exista en tu cuenta
-- O crea el tag primero en tu plataforma SMS 
+**"Tag not found"**
+- Change `TestTagName` to a tag that exists in your account
+- Or create the tag first in your SMS platform 

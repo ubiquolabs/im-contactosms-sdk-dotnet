@@ -334,4 +334,94 @@ public class ContactRequest
 
     [JsonPropertyName("custom_field_5")]
     public string CustomField5 { get; set; } = string.Empty;
+}
+
+/// <summary>
+/// Shortlink response model
+/// </summary>
+public class ShortlinkResponse
+{
+    [JsonPropertyName("_id")]
+    public string Id { get; set; } = string.Empty;
+
+    [JsonPropertyName("url_id")]
+    public string? UrlId { get; set; }
+
+    [JsonPropertyName("account_uid")]
+    public string? AccountUid { get; set; }
+
+    [JsonPropertyName("account_id")]
+    public int? AccountId { get; set; }
+
+    [JsonPropertyName("name")]
+    public string? Name { get; set; }
+
+    [JsonPropertyName("status")]
+    [JsonConverter(typeof(JsonStringEnumConverter))]
+    public ShortlinkStatus? Status { get; set; }
+
+    [JsonPropertyName("base_url")]
+    public string? BaseUrl { get; set; }
+
+    [JsonPropertyName("short_url")]
+    public string? ShortUrl { get; set; }
+
+    [JsonPropertyName("long_url")]
+    public string? LongUrl { get; set; }
+
+    [JsonPropertyName("alias")]
+    public string? Alias { get; set; }
+
+    [JsonPropertyName("visits")]
+    public int? Visits { get; set; }
+
+    [JsonPropertyName("unique_visits")]
+    public int? UniqueVisits { get; set; }
+
+    [JsonPropertyName("preview_visits")]
+    public int? PreviewVisits { get; set; }
+
+    [JsonPropertyName("created_by")]
+    public string? CreatedBy { get; set; }
+
+    [JsonPropertyName("reference_type")]
+    public string? ReferenceType { get; set; }
+
+    [JsonPropertyName("expiration")]
+    public bool? Expiration { get; set; }
+
+    [JsonPropertyName("expiration_date")]
+    public string? ExpirationDate { get; set; }
+
+    [JsonPropertyName("created_on")]
+    public long? CreatedOn { get; set; }
+}
+
+/// <summary>
+/// Shortlink create request model
+/// </summary>
+public class CreateShortlinkRequest
+{
+    [JsonPropertyName("long_url")]
+    public string LongUrl { get; set; } = string.Empty;
+
+    [JsonPropertyName("name")]
+    public string? Name { get; set; }
+
+    [JsonPropertyName("status")]
+    [JsonConverter(typeof(JsonStringEnumConverter))]
+    public ShortlinkStatus Status { get; set; } = ShortlinkStatus.ACTIVE;
+
+    [JsonPropertyName("alias")]
+    public string? Alias { get; set; }
+}
+
+/// <summary>
+/// Shortlink update status request model
+/// </summary>
+public class UpdateShortlinkStatusRequest
+{
+    [JsonPropertyName("status")]
+    [JsonConverter(typeof(JsonStringEnumConverter))]
+    public ShortlinkStatus Status { get; set; }
 } 
