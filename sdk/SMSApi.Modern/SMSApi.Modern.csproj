@@ -12,12 +12,12 @@
     <AssemblyCompany>Interactua Movil</AssemblyCompany>
     <AssemblyProduct>ContactoSMS API SDK</AssemblyProduct>
     <Copyright>Copyright © 2025</Copyright>
-    <AssemblyVersion>5.0.0.0</AssemblyVersion>
-    <FileVersion>5.0.0.0</FileVersion>
+    <AssemblyVersion>5.2.0.0</AssemblyVersion>
+    <FileVersion>5.2.0.0</FileVersion>
     
     <!-- Package Information -->
     <PackageId>InteractuaMovil.ContactoSms.Api.Modern</PackageId>
-    <PackageVersion>5.0.0</PackageVersion>
+    <PackageVersion>5.2.0</PackageVersion>
     <Authors>Interactua Movil</Authors>
     <Description>Modern .NET SDK for ContactoSMS REST API with async/await support</Description>
   </PropertyGroup>
